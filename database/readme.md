@@ -36,6 +36,7 @@ Source: Enter the private IP address of your EC2 instance.
 
 # Connect to RDS instance 
 import psycopg2
+
 engine = psycopg2.connect(
     database="postgres",
     user="my_user_name", #master user name
@@ -43,4 +44,5 @@ engine = psycopg2.connect(
     host="my-rds-table-name.123456.us-east-1.rds.amazonaws.com", #RDS hostname
     port='5432'
 )
+
 https://stackoverflow.com/questions/54300263/connect-to-aws-rds-postgres-database-with-python
