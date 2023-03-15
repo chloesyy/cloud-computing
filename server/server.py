@@ -7,8 +7,8 @@ cors = CORS(app)
 
 @app.route("/login", methods=['POST'])
 def login():
-    username = request.get_json()["userid"]
-    password = request.get_json()["pass"]
+    username = request.get_json()["username"]
+    password = request.get_json()["password"]
     print(username, password)
     try:
         return jsonify(
@@ -21,21 +21,21 @@ def login():
             "message": "Login Failed."
         }), 500
     
-@app.route("/register", methods=['POST'])
-def register():
-    username = request.get_json()["userid"]
-    password = request.get_json()["pass"]
-    print(username, password)
-    try:
-        return jsonify(
-            {
-            "message": "Registeration Successful.",
-            }
-        ), 200
-    except Exception as e:
-        return jsonify({
-            "message": "Create user failed."
-        }), 500
+# @app.route("/register", methods=['POST'])
+# def register():
+#     username = request.get_json()["userid"]
+#     password = request.get_json()["pass"]
+#     print(username, password)
+#     try:
+#         return jsonify(
+#             {
+#             "message": "Registeration Successful.",
+#             }
+#         ), 200
+#     except Exception as e:
+#         return jsonify({
+#             "message": "Create user failed."
+#         }), 500
 
 if __name__ == "__main__":
     app.run(debug=True)

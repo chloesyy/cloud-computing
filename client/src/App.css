@@ -1,12 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@400&display=swap');
 
+body,html {
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 .App {
   text-align: center;
   display: flex;
-  min-height: 100vh;
+  /* min-height: 100vh; */
   align-items: center;
   justify-content: center;
   font-family: 'Roboto', sans-serif;
+  /* border-style: solid;
+  border-color:black; */
+  height: 100vh;
 }
 
 .login-form, .register-form {
@@ -67,8 +79,6 @@ button {
   background: none;
   color:black;
 }
-
-
 
 .link-btn > span {
   text-decoration: underline;
