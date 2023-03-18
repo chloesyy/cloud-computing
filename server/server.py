@@ -20,6 +20,22 @@ def login():
         return jsonify({
             "message": "Login Failed."
         }), 500
+        
+@app.route("/form", methods=['POST'])
+def form():
+    name = request.get_json()["patientName"]
+    age = request.get_json()["age"]
+    print(name, age)
+    try:
+        return jsonify(
+            {
+            "message": "Login Successful.",
+            }
+        ), 200
+    except Exception as e:
+        return jsonify({
+            "message": "Login Failed."
+        }), 500
     
 # @app.route("/register", methods=['POST'])
 # def register():
