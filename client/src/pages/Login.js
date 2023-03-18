@@ -15,7 +15,7 @@ export default function Login() {
     // const navigate = useNavigate();
     const [values, setValues] = useState(initialState);
     // const { user, isLoading, showAlert, displayAlert, setupUser } = useAppContext();
-    console.log(values)
+    console.log(values);
 
     const toggleMember = () => {
         setValues({ ...values, isMember: !values.isMember });
@@ -27,16 +27,11 @@ export default function Login() {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        const {
-            username,
-            password,
-            isMember,
-        } = values;
+        const { username, password, isMember } = values;
 
         const currentUser = {
             Username: username,
             Password: password,
-          
         };
 
         // if (isMember) {
@@ -57,7 +52,7 @@ export default function Login() {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(values)
+            body: JSON.stringify(values),
         });
         if (response.ok) {
             console.log("response worked!");
@@ -80,32 +75,38 @@ export default function Login() {
                 )} */}
 
                 <FormRow
-                type="username"
-                name="username"
-                value={values.username}
-                handleChange={handleChange}
+                    type="username"
+                    name="username"
+                    labelText="username"
+                    value={values.username}
+                    handleChange={handleChange}
                 />
 
                 <FormRow
-                type="password"
-                name="password"
-                value={values.password}
-                handleChange={handleChange}
+                    type="password"
+                    name="password"
+                    labelText="password"
+                    value={values.password}
+                    handleChange={handleChange}
                 />
 
                 <button type="submit" className="btn btn-block">
-                Submit
+                    Submit
                 </button>
 
                 <p>
-                {values.isMember ? "Not a member yet?" : "Already a member?"}
-                <button type="button" onClick={toggleMember} className="member-btn">
-                    {values.isMember ? "Register" : "Login"}
-                </button>
+                    {values.isMember
+                        ? "Not a member yet?"
+                        : "Already a member?"}
+                    <button
+                        type="button"
+                        onClick={toggleMember}
+                        className="member-btn"
+                    >
+                        {values.isMember ? "Register" : "Login"}
+                    </button>
                 </p>
-
             </form>
         </Wrapper>
-
-    )
+    );
 }
