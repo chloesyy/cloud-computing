@@ -1,9 +1,20 @@
-const FormRow = ({ type, min, name, value, handleChange, labelText }) => {
+const FormRow = ({
+    className,
+    type,
+    min,
+    name,
+    value,
+    handleChange,
+    labelText,
+    subText,
+}) => {
     return (
-        <div className="form-row">
-            <label htmlFor={name} className="form-label">
-                {labelText || name}
-            </label>
+        <div className={className + " form-row"}>
+            {labelText && (
+                <label htmlFor={name} className="form-label">
+                    {labelText}
+                </label>
+            )}
             <input
                 type={type}
                 min={min}
@@ -12,6 +23,7 @@ const FormRow = ({ type, min, name, value, handleChange, labelText }) => {
                 onChange={handleChange}
                 className="form-input"
             />
+            {subText && <small htmlFor={name}>{subText}</small>}
         </div>
     );
 };
