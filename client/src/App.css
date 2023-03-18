@@ -1,89 +1,92 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@400&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@400&display=swap");
 
-body,html {
-  margin: 0;
-  padding: 0;
+body,
+html {
+    margin: 0;
+    padding: 0;
 }
 
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 .App {
-  text-align: center;
-  display: flex;
-  /* min-height: 100vh; */
-  align-items: center;
-  justify-content: center;
-  font-family: 'Roboto', sans-serif;
-  /* border-style: solid;
+    text-align: center;
+    display: flex;
+    /* min-height: 100vh; */
+    align-items: center;
+    justify-content: center;
+    font-family: "Roboto", sans-serif;
+    /* border-style: solid;
   border-color:black; */
-  height: 100vh;
+    height: 100vh;
 }
 
-.login-form, .register-form {
-  display: flex;
-  flex-direction: column;
-  /* border-style: solid;
+.login-form,
+.register-form {
+    display: flex;
+    flex-direction: column;
+    /* border-style: solid;
   border-color:black; */
 }
 
 .auth-form-container {
-  display: flex;
-  flex-direction: row;
-  /* border-style: solid;
+    display: flex;
+    flex-direction: row;
+    /* border-style: solid;
   border-color:black; */
 }
 
 @media screen and (min-width: 600px) {
-  .auth-form-container {
-    padding: 5rem;
-    border-radius: 10px;
-    margin: 0.5rem;
-  }
+    .auth-form-container {
+        padding: 5rem;
+        border-radius: 10px;
+        margin: 0.5rem;
+    }
 }
 
 label {
-  text-align: left;
-  padding: 0.5rem;
+    text-align: left;
+    padding: 0.5rem;
 }
 
 input {
-  margin: 0.5rem;
-  padding: 1rem;
-  border: none;
+    margin: 0.5rem;
+    padding: 1rem;
+    border: none;
 }
 
 input:focus {
-  outline-width: 0;
+    outline-width: 0;
 }
 
 button {
-  border: none;
-  padding: 20px;
-  border-radius: 15px;
-  cursor: pointer;
-  color: white;
-  background-color: #008CBA;
+    border: none;
+    padding: 20px;
+    border-radius: 15px;
+    cursor: pointer;
+    color: white;
+    background-color: #008cba;
 }
 
 .submit-button {
-  transition-duration: 0.4s;
+    transition-duration: 0.4s;
 }
 
 .submit-btn:hover {
-  background-color: #004b63;
+    background-color: #004b63;
 }
 
 .link-btn {
-  background: none;
-  color:black;
+    background: none;
+    color: black;
 }
 
 .link-btn > span {
-  text-decoration: underline;
+    text-decoration: underline;
 }
 
-.register--image, .login--image {
-  padding-left: 50px;
+.register--image,
+.login--image {
+    padding-left: 50px;
 }
