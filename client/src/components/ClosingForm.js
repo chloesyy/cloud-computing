@@ -51,8 +51,8 @@ export default function ClosingForm({
                         value={values.diagnosis}
                         onChange={handleChange}
                     >
-                        <option value="A">Positive</option>
-                        <option value="B">Negative</option>
+                        <option value="Positive">Positive</option>
+                        <option value="Negative">Negative</option>
                     </select>
                 </div>
                 <DateInput
