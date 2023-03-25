@@ -128,18 +128,20 @@ export default function Login() {
                     handleChange={handleChange}
                 />
 
-                <div>
-                    <label className="form-label">Organisation</label>
-                    <select
-                        className="form-select"
-                        name="organisation"
-                        value={values.organisation}
-                        onChange={handleChange}
-                    >
-                        <option value="NUH">NUH</option>
-                        <option value="SGH">SGH</option>
-                    </select>
-                </div>
+                {!values.isLogin && (
+                    <div>
+                        <label className="form-label">Organisation</label>
+                        <select
+                            className="form-select"
+                            name="organisation"
+                            value={values.organisation}
+                            onChange={handleChange}
+                        >
+                            <option value="NUH">NUH</option>
+                            <option value="SGH">SGH</option>
+                        </select>
+                    </div>
+                )}
 
                 <button type="submit" className="btn btn-block">
                     Submit
