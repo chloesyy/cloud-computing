@@ -1,41 +1,115 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 // import { useNavigate } from "react-router-dom";
-import RegisterImg from "./images/register.png";
+// import { useAppContext } from "../contexts/appContext";
+// import loginImg from "./images/login.png";
+import Wrapper from "./wrappers/Login";
+import FormRow from "../components/FormRow";
+// import UserPool from "../UserPool";
 
-export default function Register(props) {
-    const [userid, setUserID] = useState('');
-    const [pass, setPass] = useState('');
-    
-    const handleSubmit = (e) => {
+const initialState = {
+    username: "",
+    password: "",
+    isMember: false,
+};
+
+export default function Register() {
+    // const navigate = useNavigate();
+    const [values, setValues] = useState(initialState);
+    // const { user, isLoading, showAlert, displayAlert, setupUser } = useAppContext();
+    console.log(values);
+
+    const toggleMember = () => {
+        setValues({ ...values, isMember: !values.isMember });
+    };
+
+    const handleChange = (e) => {
+        setValues({ ...values, [e.target.name]: e.target.value });
+    };
+
+    const onSubmit = (e) => {
         e.preventDefault();
-        const newUser = {userid, pass}
-        const response = fetch("/register", {
-            method: "POST",
-            cache: "no-cache",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(newUser)
-        });
-        if (response.ok) {
-            console.log("response worked!");
+        const { username, password, isMember } = values;
+
+        const currentUser = {
+            Username: username,
+            Password: password,
+        };
+
+        if (isMember) {
         }
-    }
+
+        // if (isMember) {
+        //   setupUser({
+        //     currentUser,
+        //     alertText: "Login Sucessful! Redirecting...",
+        //   });
+        // } else {
+        //   setupUser({
+        //     currentUser,
+        //     alertText: "Registration Sucessful! Redirecting...",
+        //   });
+        // }
+
+        // UserPool.signUp(userid, pass, [], null, (err, data) => {
+        //     if (err) {
+        //         console.error(err);
+        //     }
+        //     console.log(data);
+        // });
+
+        async function get_response() {
+            await fetch("/register", {
+                method: "POST",
+                cache: "no-cache",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(values),
+            }).then((response) => {
+                if (response.ok) {
+                    console.log("response worked!");
+                }
+            });
+        }
+        get_response();
+    };
 
     return (
-        <div className="auth-form-container">
-            <div className="register-details">
-                <h2>Register</h2>
-                <form className="register-form" onSubmit={handleSubmit}>
-                    <label htmlFor="userid">User ID:</label>
-                    <input value={userid} onChange={(e) => setUserID(e.target.value)} placeholder="User ID" id="userid" name="userid" required/>
-                    <label htmlFor="password">Password:</label>
-                    <input value={pass} onChange={(e) => setPass(e.target.value)} type="Password" placeholder="********" id="password" name="password" required/>
-                    <button type="submit" className="submit-btn">Register</button>
-                </form>
-                <button className="link-btn" onClick={() => props.onFormSwitch('login')}>Already have an account? <span>Login here.</span></button>
-            </div>
-            <img src={RegisterImg} alt="register" className="register--image" />
-        </div>
-    )
+        <Wrapper>
+            <form className="form" onSubmit={onSubmit}>
+                <h3>{values.isMember ? "Login" : "Register"}</h3>
+
+                <FormRow
+                    type="username"
+                    name="username"
+                    labelText="username"
+                    value={values.username}
+                    handleChange={handleChange}
+                />
+
+                <FormRow
+                    type="password"
+                    name="password"
+                    labelText="password"
+                    value={values.password}
+                    handleChange={handleChange}
+                />
+
+                <button type="submit" className="btn btn-block">
+                    Submit
+                </button>
+
+                <p>
+                    {values.isMember
+                        ? "Not a member yet? "
+                        : "Already a member? "}
+
+                    <Link to="/login" className="member-btn">
+                        Register
+                    </Link>
+                </p>
+            </form>
+        </Wrapper>
+    );
 }

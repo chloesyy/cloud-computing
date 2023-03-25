@@ -1,24 +1,26 @@
 import React, { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import { useAppContext } from "../contexts/appContext";
-// import loginImg from "./images/login.png";
 import Wrapper from "./wrappers/Login";
 import FormRow from "../components/FormRow";
+import {
+    CognitoUser,
+    AuthenticationDetails,
+    CognitoUserAttribute,
+} from "amazon-cognito-identity-js";
+import UserPool from "../UserPool";
 
 const initialState = {
     username: "",
     password: "",
-    isMember: true,
+    organisation: "",
+    isLogin: true,
 };
 
 export default function Login() {
-    // const navigate = useNavigate();
     const [values, setValues] = useState(initialState);
-    // const { user, isLoading, showAlert, displayAlert, setupUser } = useAppContext();
     console.log(values);
 
     const toggleMember = () => {
-        setValues({ ...values, isMember: !values.isMember });
+        setValues({ ...values, isLogin: !values.isLogin });
     };
 
     const handleChange = (e) => {
@@ -27,52 +29,88 @@ export default function Login() {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        const { username, password, isMember } = values;
 
-        const currentUser = {
-            Username: username,
-            Password: password,
-        };
+        async function get_response() {
+            await fetch("/login", {
+                method: "POST",
+                cache: "no-cache",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(values),
+            }).then((response) => {
+                if (response.ok) {
+                    console.log("response worked!");
+                }
+            });
+        }
 
-        // if (isMember) {
-        //   setupUser({
-        //     currentUser,
-        //     alertText: "Login Sucessful! Redirecting...",
-        //   });
-        // } else {
-        //   setupUser({
-        //     currentUser,
-        //     alertText: "Registration Sucessful! Redirecting...",
-        //   });
-        // }
+        if (values.isLogin) {
+            // Login AWS Cognito
+            const user = new CognitoUser({
+                Username: values.username,
+                Pool: UserPool,
+            });
+            const authDetails = new AuthenticationDetails({
+                Username: values.username,
+                Password: values.password,
+            });
 
-        const response = fetch("/login", {
-            method: "POST",
-            cache: "no-cache",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(values),
-        });
-        if (response.ok) {
-            console.log("response worked!");
+            user.authenticateUser(authDetails, {
+                onSuccess: (data) => {
+                    // TODO: Re-route to home page
+                    console.log("onSuccess: ", data);
+                },
+                onFailure: (err) => {
+                    // TODO: Show alert
+                    console.error("onFailure: ", err);
+                },
+                newPasswordRequired: (data) => {
+                    // TODO: Show alert
+                    console.log("newPasswordRequired: ", data);
+                },
+            });
+        } else {
+            // Sign up AWS Cognito
+            var attributeList = [];
+            const dataEmail = {
+                Name: "email",
+                Value: "seah11chloe@gmail.com",
+            };
+            var dataOrganisation = {
+                Name: "custom:organisation",
+                Value: values.organisation,
+            };
+
+            var attributeEmail = new CognitoUserAttribute(dataEmail);
+            var attributeOrganisation = new CognitoUserAttribute(
+                dataOrganisation
+            );
+
+            attributeList.push(attributeEmail);
+            attributeList.push(attributeOrganisation);
+
+            UserPool.signUp(
+                values.username,
+                values.password,
+                attributeList,
+                null,
+                (err, data) => {
+                    if (err) {
+                        // TODO: show error alert
+                        console.error(err);
+                    }
+                    console.log(data);
+                    get_response();
+                }
+            );
         }
     };
 
     return (
         <Wrapper>
             <form className="form" onSubmit={onSubmit}>
-                <h3>{values.isMember ? "Login" : "Register"}</h3>
-                {/* {!values.isMember && (
-                <div>
-                    <FormRow
-                    type="text"
-                    name="username"
-                    value={values.username}
-                    handleChange={handleChange}
-                    />
-                </div>
-                )} */}
+                <h3>{values.isLogin ? "Login" : "Register"}</h3>
 
                 <FormRow
                     type="username"
@@ -90,20 +128,34 @@ export default function Login() {
                     handleChange={handleChange}
                 />
 
+                <div>
+                    <label className="form-label">Organisation</label>
+                    <select
+                        className="form-select"
+                        name="organisation"
+                        value={values.organisation}
+                        onChange={handleChange}
+                    >
+                        <option value="NUH">NUH</option>
+                        <option value="SGH">SGH</option>
+                    </select>
+                </div>
+
                 <button type="submit" className="btn btn-block">
                     Submit
                 </button>
 
                 <p>
-                    {values.isMember
-                        ? "Not a member yet?"
-                        : "Already a member?"}
+                    {values.isLogin
+                        ? "Not a member yet? "
+                        : "Already a member? "}
+
                     <button
                         type="button"
                         onClick={toggleMember}
                         className="member-btn"
                     >
-                        {values.isMember ? "Register" : "Login"}
+                        {values.isLogin ? "Register" : "Login"}
                     </button>
                 </p>
             </form>
