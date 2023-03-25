@@ -9,6 +9,7 @@ cors = CORS(app)
 def login():
     username = request.get_json()["username"]
     password = request.get_json()["password"]
+    organisation = request.get_json()["organisation"]
     isLogin = request.get_json()["isLogin"]
     print(username, password)
     
