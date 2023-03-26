@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Wrapper from "./wrappers/Login";
 import FormRow from "../components/FormRow";
+
 import {
     CognitoUser,
     AuthenticationDetails,
@@ -13,14 +15,17 @@ const initialState = {
     password: "",
     organisation: "",
     isLogin: true,
+    isError: false,
+    errorMessage: "",
 };
 
 export default function Login() {
+    const navigate = useNavigate();
     const [values, setValues] = useState(initialState);
     console.log(values);
 
     const toggleMember = () => {
-        setValues({ ...values, isLogin: !values.isLogin });
+        setValues({ ...values, isError: false, isLogin: !values.isLogin });
     };
 
     const handleChange = (e) => {
@@ -30,20 +35,20 @@ export default function Login() {
     const onSubmit = (e) => {
         e.preventDefault();
 
-        async function get_response() {
-            await fetch("/login", {
-                method: "POST",
-                cache: "no-cache",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(values),
-            }).then((response) => {
-                if (response.ok) {
-                    console.log("response worked!");
-                }
-            });
-        }
+        // async function get_response() {
+        //     await fetch("/login", {
+        //         method: "POST",
+        //         cache: "no-cache",
+        //         headers: {
+        //             "Content-Type": "application/json",
+        //         },
+        //         body: JSON.stringify(values),
+        //     }).then((response) => {
+        //         if (response.ok) {
+        //             console.log("response worked!");
+        //         }
+        //     });
+        // }
 
         if (values.isLogin) {
             // Login AWS Cognito
@@ -58,15 +63,16 @@ export default function Login() {
 
             user.authenticateUser(authDetails, {
                 onSuccess: (data) => {
-                    // TODO: Re-route to home page
+                    setValues({ ...values, isError: false });
                     console.log("onSuccess: ", data);
+                    navigate('../form', values);
                 },
                 onFailure: (err) => {
-                    // TODO: Show alert
+                    setValues({ ...values, isError: true, errorMessage: err.message});
                     console.error("onFailure: ", err);
                 },
                 newPasswordRequired: (data) => {
-                    // TODO: Show alert
+                    // TODO: Show alert (not sure under what circumstance this happens)
                     console.log("newPasswordRequired: ", data);
                 },
             });
@@ -96,12 +102,14 @@ export default function Login() {
                 attributeList,
                 null,
                 (err, data) => {
+                    if (err == null) {
+                        setValues({ ...values, isLogin: true, isError: false, errorMessage: "", password: ""});
+                    }
                     if (err) {
-                        // TODO: show error alert
+                        setValues({ ...values, isError: true, errorMessage: err.message});
                         console.error(err);
                     }
-                    console.log(data);
-                    get_response();
+                    console.log(data)
                 }
             );
         }
@@ -137,8 +145,9 @@ export default function Login() {
                             value={values.organisation}
                             onChange={handleChange}
                         >
-                            <option value="NUH">NUH</option>
-                            <option value="SGH">SGH</option>
+                            <option value="NUH">National University Health System (NUHS)</option>
+                            <option value="SGH">National Healthcare Group (NHG)</option>
+                            <option value="SingHealth">Singapore Health Services (SingHealth)</option>
                         </select>
                     </div>
                 )}
@@ -147,6 +156,10 @@ export default function Login() {
                     Submit
                 </button>
 
+                {values.isError && (
+                    <p className='error-message' style={{color: "red"}}>{values.errorMessage}</p>
+                )}
+                
                 <p>
                     {values.isLogin
                         ? "Not a member yet? "

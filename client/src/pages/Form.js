@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+// import { useNavigate } from "react-router-dom";
 import PatientDetails from "../components/PatientDetails";
 import MedicalInfo from "../components/MedicalInfo";
 import ClosingForm from "../components/ClosingForm";
@@ -30,6 +31,14 @@ const initialState = {
 };
 
 export default function Form() {
+
+    // const navigate = useNavigate();
+    // useEffect(() => {
+    //     if (!values.isAuthenticated) {
+    //         navigate('../login')
+    //     }
+    // }, []);
+
     const [values, setValues] = useState(initialState);
 
     const previousStep = (e) => {
@@ -75,4 +84,7 @@ export default function Form() {
             );
         default:
     }
+
+        // }
+    // };
 }

@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
 import Form from "./pages/Form";
 
 export default function App() {
@@ -14,7 +13,7 @@ export default function App() {
                 <Routes>
                     <Route path="/" element={<Landing />} />
                     <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
+                    {/* TODO: prevent self-navigating to /form page */}
                     <Route path="/form" element={<Form />} />
                 </Routes>
             </BrowserRouter>
