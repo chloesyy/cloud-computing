@@ -3,6 +3,7 @@ import Wrapper from "../pages/wrappers/Login";
 import FormRow from "./FormRow";
 import Checkbox from "./Checkbox";
 import DateInput from "./DateInput";
+import Modal from "./modal/Modal";
 
 export default function MedicalInfo({
     nextStep,
@@ -111,9 +112,9 @@ export default function MedicalInfo({
                     value={values.results}
                     handleChange={handleChange}
                 />
-                <button onClick={Predict} className="btn btn-danger btn-block">
-                    Predict
-                </button>
+
+                <Modal onClick={Predict} />
+
                 <div className="form-container">
                     <button onClick={Previous} className="btn btn-block">
                         Back
