@@ -31,5 +31,16 @@ const Wrapper = styled.section`
     cursor: pointer;
     letter-spacing: var(--letterSpacing);
   }
+  ul {
+    list-style-type: circle;
+    font-size: 14px;
+    margin-left: 10px;
+  }
+  ul > li {
+    margin-left: 10px;
+  }
+  .inner-list > li {
+    list-style-type: disc;
+  }
 `;
 export default Wrapper;
