@@ -136,8 +136,20 @@ export default function Login() {
                     handleChange={handleChange}
                 />
 
+
                 {!values.isLogin && (
                     <div>
+                        <ul>
+                            <li>Password has to contain at least 10 characters</li>
+                            <li>Password includes the following:
+                                <ul className='inner-list'>
+                                    <li>An uppercase character</li>
+                                    <li>A lowercase character</li>
+                                    <li>A special character</li>
+                                    <li>A number</li>
+                                </ul>
+                            </li>
+                        </ul>
                         <label className="form-label">Organisation</label>
                         <select
                             className="form-select"
