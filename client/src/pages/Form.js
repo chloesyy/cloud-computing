@@ -24,14 +24,13 @@ const initialState = {
     areaWorst: "",
     symmetryMean: "",
     textureMean: "",
-    medicalImage: "",
+    // medicalImage: null,
     results: "",
     diagnosis: "",
     doc: "",
 };
 
 export default function Form() {
-
     // const navigate = useNavigate();
     // useEffect(() => {
     //     if (!values.isAuthenticated) {
@@ -85,6 +84,6 @@ export default function Form() {
         default:
     }
 
-        // }
+    // }
     // };
 }

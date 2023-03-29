@@ -98,13 +98,13 @@ export default function MedicalInfo({
                     value={values.textureMean}
                     handleChange={handleChange}
                 />
-                <FormRow
+                {/* <FormRow
                     type="file"
                     name="medicalImage"
                     labelText="Medical Image"
                     value={values.medicalImage}
                     handleChange={handleChange}
-                />
+                /> */}
                 <FormRow
                     type="text"
                     name="results"
