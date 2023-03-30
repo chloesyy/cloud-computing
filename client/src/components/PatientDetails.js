@@ -47,7 +47,7 @@ export default function PatientDetails({
 
     return (
         <Wrapper>
-            <form className="form" onSubmit={onSubmit}>
+            <form className="form" onSubmit={Continue}>
                 <h3>Patient Information</h3>
 
                 <FormRow
@@ -119,7 +119,11 @@ export default function PatientDetails({
                     handleChange={handleChange}
                 />
 
-                <button onClick={Continue} className="btn btn-block">
+                <button
+                    type="submit"
+                    // onClick={Continue}
+                    className="btn btn-block"
+                >
                     Next
                 </button>
             </form>

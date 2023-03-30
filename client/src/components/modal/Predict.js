@@ -13,7 +13,7 @@ export default function Predict({ values, setValues }) {
         e.preventDefault();
 
         console.log("Predicting...");
-        // setPrediction(null);
+        setPrediction(null);
 
         async function get_response() {
             await fetch("/predict", {
@@ -61,9 +61,17 @@ export default function Predict({ values, setValues }) {
                     <div className="modal-content">
                         <h5>Prediction Results</h5>
                         <p>
-                            {values.prediction >= 0.5 ? "Positive" : "Negative"}
+                            {values.prediction != null
+                                ? values.prediction >= 0.5
+                                    ? "Positive"
+                                    : "Negative"
+                                : "Invalid Input: Please fill in all input fields"}
                         </p>
-                        <p>Positive Confidence Score: {values.prediction}</p>
+                        {values.prediction != null && (
+                            <p>
+                                Positive Confidence Score: {values.prediction}
+                            </p>
+                        )}
                         <input
                             type="image"
                             src={close}

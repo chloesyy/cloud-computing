@@ -9,6 +9,7 @@ const DateInput = ({ className, selected, handleChange, labelText }) => {
                 className="form-input"
                 selected={selected}
                 onChange={handleChange}
+                required
             />
         </div>
     );

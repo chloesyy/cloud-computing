@@ -51,7 +51,7 @@ export default function MedicalInfo({
 
     return (
         <Wrapper>
-            <form className="form" onSubmit={onSubmit}>
+            <form className="form" onSubmit={Continue}>
                 <h3>Medical Information</h3>
                 <FormRow
                     type="text"
@@ -130,7 +130,7 @@ export default function MedicalInfo({
                     <button onClick={Previous} className="btn btn-block">
                         Back
                     </button>
-                    <button onClick={Continue} className="btn btn-block">
+                    <button type="submit" className="btn btn-block">
                         Next
                     </button>
                 </div>
