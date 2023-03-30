@@ -5,7 +5,9 @@ To facilitate periodic training of new data contributed by various healthcare or
 # Set up Ec2
 1. Run an Ec2 instance
 2. Upload the train.py into the home directory
-3. Ensure that Ec2 is able to communicate with Rds with all the table information and s3 bucket to upload trained model (ie. all the vpc configurations are set, permission to communicate with rds is also set)
+3. Ensure .aws is updated with credentials because train.py requires access to s3 buckets
+4. Run pip3 install -r requirements.txt to set up environment to run train.py 
+4. Ensure that Ec2 is able to communicate with Rds with all the table information and s3 bucket to upload trained model 
 
 
 # Setup AWS Lambda
