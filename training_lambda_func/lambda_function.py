@@ -45,6 +45,6 @@ def lambda_handler(event, context):
     print('stderr:', stderr.read())
     
     log_ = "Updated model"
-    instance.stop_instance()
+    instance.stop()
     
     return log_
