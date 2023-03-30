@@ -34,22 +34,24 @@ export default function MedicalInfo({
     const Predict = (e) => {
         e.preventDefault();
         console.log("Predicting...");
-        // TODO: PREDICTION OF MODEL HERE
+        // TODO: Figure out error
 
-        const response = fetch("/predict", {
-            credentials: "include",
-            method: "POST",
-            cache: "no-cache",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(values),
-        });
-        if (response.ok) {
-            // TODO: update form with new prediction
-            console.log("predicted!");
-            console.log(response);
+        async function get_response() {
+            await fetch("/predict", {
+                method: "POST",
+                cache: "no-cache",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(values),
+            }).then((response) => {
+                if (response.ok) {
+                    console.log("predicted!");
+                    console.log(response);
+                }
+            });
         }
+        get_response();
     };
     const Previous = (e) => {
         e.preventDefault();
