@@ -35,6 +35,11 @@ export default function MedicalInfo({
         get_response();
     };
 
+    const setNumber = (e) => {
+        const result = e.target.value.replace(/\D/g, "");
+        setValues({ ...values, [e.target.name]: result });
+    };
+
     const Previous = (e) => {
         e.preventDefault();
         previousStep();
@@ -49,60 +54,60 @@ export default function MedicalInfo({
             <form className="form" onSubmit={onSubmit}>
                 <h3>Medical Information</h3>
                 <FormRow
-                    type="number"
+                    type="text"
                     name="concavityMean"
                     labelText="Concavity Mean"
                     value={values.concavityMean}
-                    handleChange={handleChange}
+                    handleChange={setNumber}
                 />
                 <FormRow
-                    type="number"
+                    type="text"
                     name="concavitySE"
                     labelText="Concavity SE"
                     value={values.concavitySE}
-                    handleChange={handleChange}
+                    handleChange={setNumber}
                 />
                 <FormRow
-                    type="number"
+                    type="text"
                     name="concavityWorst"
                     labelText="Concavity Worst"
                     value={values.concavityWorst}
-                    handleChange={handleChange}
+                    handleChange={setNumber}
                 />
                 <FormRow
-                    type="number"
+                    type="text"
                     name="areaMean"
                     labelText="Area Mean"
                     value={values.areaMean}
-                    handleChange={handleChange}
+                    handleChange={setNumber}
                 />
                 <FormRow
-                    type="number"
+                    type="text"
                     name="areaSE"
                     labelText="Area SE"
                     value={values.areaSE}
-                    handleChange={handleChange}
+                    handleChange={setNumber}
                 />
                 <FormRow
-                    type="number"
+                    type="text"
                     name="areaWorst"
                     labelText="Area Worst"
                     value={values.areaWorst}
-                    handleChange={handleChange}
+                    handleChange={setNumber}
                 />
                 <FormRow
-                    type="number"
+                    type="text"
                     name="symmetryMean"
                     labelText="Symmetry Mean"
                     value={values.symmetryMean}
-                    handleChange={handleChange}
+                    handleChange={setNumber}
                 />
                 <FormRow
-                    type="number"
+                    type="text"
                     name="textureMean"
                     labelText="Texture Mean"
                     value={values.textureMean}
-                    handleChange={handleChange}
+                    handleChange={setNumber}
                 />
                 {/* <FormRow
                     type="file"

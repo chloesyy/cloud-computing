@@ -13,6 +13,7 @@ export default function Predict({ values, setValues }) {
         e.preventDefault();
 
         console.log("Predicting...");
+        // setPrediction(null);
 
         async function get_response() {
             await fetch("/predict", {
@@ -62,7 +63,7 @@ export default function Predict({ values, setValues }) {
                         <p>
                             {values.prediction >= 0.5 ? "Positive" : "Negative"}
                         </p>
-                        <p>Confidence score: {values.prediction}</p>
+                        <p>Positive Confidence Score: {values.prediction}</p>
                         <input
                             type="image"
                             src={close}
