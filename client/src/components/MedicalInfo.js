@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import Wrapper from "../pages/wrappers/Login";
 import FormRow from "./FormRow";
-import Checkbox from "./Checkbox";
-import DateInput from "./DateInput";
-import Modal from "./modal/Modal";
+// import Checkbox from "./Checkbox";
+// import DateInput from "./DateInput";
+import Predict from "./modal/Predict";
 
 export default function MedicalInfo({
     nextStep,
@@ -17,27 +17,8 @@ export default function MedicalInfo({
     const onSubmit = (e) => {
         e.preventDefault();
 
-        const response = fetch("/form", {
-            credentials: "include",
-            method: "POST",
-            cache: "no-cache",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(values),
-        });
-        if (response.ok) {
-            console.log("response worked!");
-        }
-    };
-
-    const Predict = (e) => {
-        e.preventDefault();
-        console.log("Predicting...");
-        // TODO: Figure out error
-
         async function get_response() {
-            await fetch("/predict", {
+            await fetch("/form", {
                 method: "POST",
                 cache: "no-cache",
                 headers: {
@@ -46,13 +27,14 @@ export default function MedicalInfo({
                 body: JSON.stringify(values),
             }).then((response) => {
                 if (response.ok) {
-                    console.log("predicted!");
-                    console.log(response);
+                    console.log("response worked!");
                 }
             });
         }
+
         get_response();
     };
+
     const Previous = (e) => {
         e.preventDefault();
         previousStep();
@@ -130,7 +112,7 @@ export default function MedicalInfo({
                     handleChange={handleChange}
                 />
 
-                <Modal onClick={Predict} />
+                <Predict values={values} />
 
                 <div className="form-container">
                     <button onClick={Previous} className="btn btn-block">

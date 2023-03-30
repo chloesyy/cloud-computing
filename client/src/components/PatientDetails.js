@@ -22,18 +22,22 @@ export default function PatientDetails({
     const onSubmit = (e) => {
         e.preventDefault();
 
-        const response = fetch("/form", {
-            credentials: "include",
-            method: "POST",
-            cache: "no-cache",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(values),
-        });
-        if (response.ok) {
-            console.log("response worked!");
+        async function get_response() {
+            await fetch("/form", {
+                method: "POST",
+                cache: "no-cache",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(values),
+            }).then((response) => {
+                if (response.ok) {
+                    console.log("response worked!");
+                }
+            });
         }
+
+        get_response();
     };
 
     const Continue = (e) => {
