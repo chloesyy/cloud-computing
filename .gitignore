@@ -1,2 +1,7 @@
-config.json
+# Ignore Mac OS files
+.DS_Store
+
 node_modules/
+__pycache__/
+
+config.json
