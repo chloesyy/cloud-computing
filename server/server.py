@@ -78,11 +78,19 @@ def form():
 @app.route("/predict", methods=['POST'])
 def predict():
     values = request.get_json()
-    print(values)
+    data = [values['concavityMean'], 
+            values['areaSE'], 
+            values['areaWorst'], 
+            values['concavityWorst'], 
+            values['concavitySE'],
+            values['textureMean'],
+            values['areaMean'],
+            values['symmetryMean']]
+    print(data)
     try:
         # TODO: do prediction and return result
-        # result = model.predict()
-        result = ""
+        result = model.predict(data)
+        print("result:", result)
         return jsonify(
             {
             "message": "Prediction Successful.",
