@@ -45,7 +45,7 @@ export default function ClosingForm({
         <Wrapper>
             <form className="form" onSubmit={onSubmit}>
                 <h3>Patient Information</h3>
-                <div>
+                <div className="form-row">
                     <label className="form-label">Final Diagnosis</label>
                     <select
                         className="form-select"

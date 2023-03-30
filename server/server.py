@@ -3,7 +3,7 @@ import boto3
 import pickle
 from flask_cors import CORS
 from flask import Flask, request, jsonify
-
+import numpy as np
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -18,7 +18,8 @@ AWS_TOKEN = config['s3']['token']
 ########################################### GET MODEL FOR PREDICTION ################################################
 # Credentials should already by setup in ec2 instance
 # If running locally, credentials can be found by starting AWS Learner's Lab and typing:
-# cat ~/.aws/credentials in the console
+# cat ~/.aws/credentials 
+# in the console
 s3_session = boto3.Session(
     aws_access_key_id = AWS_ACCESS_KEY_ID,
     aws_secret_access_key = AWS_SECRET_ACCESS_KEY,
@@ -78,23 +79,22 @@ def form():
 @app.route("/predict", methods=['POST'])
 def predict():
     values = request.get_json()
-    data = [values['concavityMean'], 
-            values['areaSE'], 
-            values['areaWorst'], 
-            values['concavityWorst'], 
-            values['concavitySE'],
-            values['textureMean'],
-            values['areaMean'],
-            values['symmetryMean']]
-    print(data)
+    data = [[float(values['concavityMean']), 
+            float(values['areaSE']), 
+            float(values['areaWorst']), 
+            float(values['concavityWorst']), 
+            float(values['concavitySE']),
+            float(values['textureMean']),
+            float(values['areaMean']),
+            float(values['symmetryMean'])]]
+    data = np.array(data).reshape((1, 8))
     try:
-        # TODO: do prediction and return result
-        result = model.predict(data)
-        print("result:", result)
+        result = model.predict_proba(data)
+        print("result:", np.round(float(result[:, 1][0]), 2))
         return jsonify(
             {
             "message": "Prediction Successful.",
-            "result": result
+            "prediction": np.round(float(result[:, 1][0]), 2)
             }
         ), 200
     except Exception as e:

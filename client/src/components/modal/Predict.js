@@ -2,14 +2,17 @@ import React, { useState } from "react";
 import close from "../images/close.png";
 import "./Predict.css";
 
-export default function Predict({ values }) {
+export default function Predict({ values, setValues }) {
     const [modal, setModal] = useState(false);
 
-    const toggleModal = (e) => {
+    const setPrediction = (prediction) => {
+        setValues({ ...values, prediction: prediction });
+    };
+
+    const predict = (e) => {
         e.preventDefault();
 
         console.log("Predicting...");
-        // TODO: Figure out error
 
         async function get_response() {
             await fetch("/predict", {
@@ -19,15 +22,19 @@ export default function Predict({ values }) {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(values),
-            }).then((response) => {
-                if (response.ok) {
-                    console.log("predicted!");
-                    // console.log(response);
-                }
-                console.log(response);
-            });
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log(data);
+                    setPrediction(data.prediction);
+                    console.log(values.prediction);
+                });
         }
         get_response();
+        setModal(!modal);
+    };
+
+    const toggleModal = () => {
         setModal(!modal);
     };
 
@@ -41,7 +48,7 @@ export default function Predict({ values }) {
     return (
         <>
             <button
-                onClick={toggleModal}
+                onClick={predict}
                 className="btn-modal btn btn-danger btn-block"
             >
                 Predict
@@ -52,7 +59,10 @@ export default function Predict({ values }) {
                     <div onClick={toggleModal} className="overlay"></div>
                     <div className="modal-content">
                         <h5>Prediction Results</h5>
-                        <p>INSERT RESULTS HERE</p>
+                        <p>
+                            {values.prediction >= 0.5 ? "Positive" : "Negative"}
+                        </p>
+                        <p>Confidence score: {values.prediction}</p>
                         <input
                             type="image"
                             src={close}

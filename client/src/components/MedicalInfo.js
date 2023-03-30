@@ -64,6 +64,13 @@ export default function MedicalInfo({
                 />
                 <FormRow
                     type="number"
+                    name="concavityWorst"
+                    labelText="Concavity Worst"
+                    value={values.concavityWorst}
+                    handleChange={handleChange}
+                />
+                <FormRow
+                    type="number"
                     name="areaMean"
                     labelText="Area Mean"
                     value={values.areaMean}
@@ -104,15 +111,15 @@ export default function MedicalInfo({
                     value={values.medicalImage}
                     handleChange={handleChange}
                 /> */}
-                <FormRow
+                {/* <FormRow
                     type="text"
                     name="results"
-                    labelText="Results"
-                    value={values.results}
-                    handleChange={handleChange}
-                />
+                    labelText="Prediction"
+                    value={values.prediction}
+                    // handleChange={handleChange}
+                /> */}
 
-                <Predict values={values} />
+                <Predict values={values} setValues={setValues} />
 
                 <div className="form-container">
                     <button onClick={Previous} className="btn btn-block">
