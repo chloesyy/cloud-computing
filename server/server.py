@@ -1,6 +1,6 @@
 import json
 import boto3
-import joblib
+import pickle
 from flask_cors import CORS
 from flask import Flask, request, jsonify
 
@@ -31,8 +31,7 @@ file_name = 'model/xgb_breast_classifier.pkl'
 location = 'tmp/xgb_breast_classifier.pkl'
 
 s3.download_file(bucket_name, file_name, location)
-# Fix model loading error
-model = joblib.load(location)
+model = pickle.load(open(location, "rb"))
 
 ########################################### REACT REQUESTS ##############################################
 
@@ -79,9 +78,11 @@ def form():
 @app.route("/predict", methods=['POST'])
 def predict():
     values = request.get_json()
+    print(values)
     try:
         # TODO: do prediction and return result
-        result = model.predict()
+        # result = model.predict()
+        result = ""
         return jsonify(
             {
             "message": "Prediction Successful.",
