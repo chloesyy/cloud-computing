@@ -23,9 +23,10 @@ class RDSdatabase:
         self.portNum = rdsPort
 
 # Get train_data from rds, by default we will have a table in the rds instance that is specific for training
-#RDS = RDSdatabase(masterUserName = 'masteruser', masterPassword = "hishmaster123", rdsHostName = 'hish-db-01.cfwyts8tlkjs.us-east-1.rds.amazonaws.com', rdsDBName= 'postgres', rdsPort=5432)
-RDS = RDSdatabase(masterUserName = 'postgres', masterPassword = 123456789, rdsHostName = 'database-2.cji9asuwmz4i.us-east-1.rds.amazonaws.com', rdsDBName= 'postgres', rdsPort=5432)
-df_rds = pd.read_sql_query("""SELECT * FROM PATIENT""", RDS.masterEngine)
+RDS = RDSdatabase(masterUserName = 'masteruser', masterPassword = "hishmaster123", rdsHostName = 'hish-db-01.cfwyts8tlkjs.us-east-1.rds.amazonaws.com', rdsDBName= 'postgres', rdsPort=5432)
+#RDS = RDSdatabase(masterUserName = 'postgres', masterPassword = 123456789, rdsHostName = 'database-2.cji9asuwmz4i.us-east-1.rds.amazonaws.com', rdsDBName= 'postgres', rdsPort=5432)
+#df_rds = pd.read_sql_query("""SELECT * FROM PATIENT""", RDS.masterEngine)
+df_rds = pd.read_sql_query("""SELECT * FROM joint_table""", RDS.masterEngine)
 df_rds['diagnosis'] = df_rds['diagnosis'].map({'B': 0, 'M': 1})
 
 # Get S3 bucket to upload   
