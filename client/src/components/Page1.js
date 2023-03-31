@@ -1,15 +1,25 @@
 import React from "react";
 import Wrapper from "../pages/wrappers/Login";
-import FormRow from "../components/FormRow";
-import DateInput from "../components/DateInput";
+import FormRow from "./FormRow";
+import DateInput from "./DateInput";
+import AreaCodes from "./AreaCodes";
+import moment from "moment";
 
-export default function PatientDetails({
-    nextStep,
-    handleChange,
-    values,
-    setValues,
-}) {
+export default function Page1({ nextStep, handleChange, values, setValues }) {
     console.log(values);
+
+    const areaCodeSelection = AreaCodes.map((item) => {
+        return (
+            <option value={item.code}>
+                {item.country} (+{item.code})
+            </option>
+        );
+    });
+
+    const setPhoneNumber = (e) => {
+        const result = e.target.value.replace(/\D/g, "");
+        setValues({ ...values, [e.target.name]: result });
+    };
 
     const setDOB = (date) => {
         setValues({ ...values, dob: date });
@@ -17,27 +27,6 @@ export default function PatientDetails({
 
     const setDOS = (date) => {
         setValues({ ...values, dos: date });
-    };
-
-    const onSubmit = (e) => {
-        e.preventDefault();
-
-        async function get_response() {
-            await fetch("/form", {
-                method: "POST",
-                cache: "no-cache",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(values),
-            }).then((response) => {
-                if (response.ok) {
-                    console.log("response worked!");
-                }
-            });
-        }
-
-        get_response();
     };
 
     const Continue = (e) => {
@@ -81,21 +70,25 @@ export default function PatientDetails({
                 <div>
                     <label className="form-label">Phone Number</label>
                     <div className="form-container">
-                        <FormRow
-                            className="form-first"
-                            type="number"
-                            name="areaCode"
-                            subText="Area Code"
-                            value={values.areaCode}
-                            handleChange={handleChange}
-                        />
+                        <div>
+                            <select
+                                className="form-select"
+                                name="areaCode"
+                                value={values.areaCode}
+                                onChange={handleChange}
+                                required
+                            >
+                                {areaCodeSelection}
+                            </select>
+                            <small>Area Code</small>
+                        </div>
                         <FormRow
                             className="form-last"
-                            type="number"
+                            type="text"
                             name="phoneNumber"
                             subText="Phone Number"
                             value={values.phoneNumber}
-                            handleChange={handleChange}
+                            handleChange={setPhoneNumber}
                         />
                     </div>
                 </div>
@@ -119,11 +112,7 @@ export default function PatientDetails({
                     handleChange={handleChange}
                 />
 
-                <button
-                    type="submit"
-                    // onClick={Continue}
-                    className="btn btn-block"
-                >
+                <button type="submit" className="btn btn-block">
                     Next
                 </button>
             </form>

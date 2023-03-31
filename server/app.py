@@ -12,20 +12,13 @@ cors = CORS(app)
 with open("config.json", "r") as f:
     config = json.load(f)
 
-AWS_ACCESS_KEY_ID = config['aws_credentials']['access_key_id']
-AWS_SECRET_ACCESS_KEY = config['aws_credentials']['secret_access_key']
-AWS_TOKEN = config['aws_credentials']['token']
-
 ########################################### CONNECT TO RDS ################################################
-#not sure where to put this. Initial database configuration
-masterUserName = "masteruser"
-masterPassword = "hishmaster123"
-host = "hish-db-01.cfwyts8tlkjs.us-east-1.rds.amazonaws.com"
-dbName = "postgres"
-postgresPort = 5432
-rdsDB = RDSdatabase(masterUserName,masterPassword,host,dbName,postgresPort)
-#initial config
-rdsDB.initialConfig()
+# rdsDB = RDSdatabase(config['rds']['username'],
+#                     config['rds']['password'],
+#                     config['rds']['host'],
+#                     config['rds']['dbname'],
+#                     config['rds']['port'])
+# rdsDB.initialConfig()   # initial config
 
 ########################################### GET MODEL FOR PREDICTION ################################################
 # Credentials should already by setup in ec2 instance
@@ -33,9 +26,9 @@ rdsDB.initialConfig()
 # cat ~/.aws/credentials 
 # in the console
 s3_session = boto3.Session(
-    aws_access_key_id = AWS_ACCESS_KEY_ID,
-    aws_secret_access_key = AWS_SECRET_ACCESS_KEY,
-    aws_session_token = AWS_TOKEN
+    aws_access_key_id = config['aws_credentials']['access_key_id'],
+    aws_secret_access_key = config['aws_credentials']['secret_access_key'],
+    aws_session_token = config['aws_credentials']['token']
 )
 s3 = s3_session.client('s3')
 
@@ -61,11 +54,11 @@ def login():
     # } else {
     #     # TODO: handle register
     # }
-    if not isLogin: 
-        #register user
-        rdsDB.createNewUser(username, password, organisation)
-    #user sign in 
-    userEngine, userCursor = rdsDB.userSignIn(username, password)
+    # if not isLogin: 
+    #     #register user
+    #     rdsDB.createNewUser(username, password, organisation)
+    # #user sign in 
+    # userEngine, userCursor = rdsDB.userSignIn(username, password)
     
     try:
         return jsonify(
@@ -81,6 +74,9 @@ def login():
 @app.route("/form", methods=['POST'])
 def form():
     values = request.get_json()
+    
+    # TODO: use this to update the RDS database!
+    # variable names can be found on Form.js 
     try:
         return jsonify(
             {
