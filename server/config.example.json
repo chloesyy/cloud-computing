@@ -7,5 +7,12 @@
     "s3": {
         "bucket_name": "",
         "file_path": ""
+    },
+    "rds": {
+        "username": "",
+        "password": "",
+        "host": "",
+        "dbname": "postgres",
+        "port": 5432
     }
 }
