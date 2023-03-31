@@ -26,6 +26,22 @@ class RDSdatabase:
         password VARCHAR (50) NOT NULL,
         organisationName VARCHAR (100) NOT NULL
         );
+
+        CREATE TABLE joint_table (
+        isLeftBreast BOOLEAN NOT NULL,
+        isImplant BOOLEAN NOT NULL,
+        density VARCHAR(1) NOT NULL,
+        remarks VARCHAR(100) NOT NULL,
+        concavityMean FLOAT NOT NULL,
+        concavitySE FLOAT NOT NULL,
+        areaMean FLOAT NOT NULL,
+        areaSE FLOAT NOT NULL,
+        areaWorst FLOAT NOT NULL,
+        symmetryMean FLOAT NOT NULL,
+        textureMean FLOAT NOT NULL,
+        diagnosis VARCHAR (100) NOT NULL,
+        dateOfClosure TIMESTAMP NOT NULL
+        );
         """)
 
         self.masterCursor.execute(sqlQuery)
@@ -61,12 +77,11 @@ class RDSdatabase:
         areaWorst FLOAT NOT NULL,
         symmetryMean FLOAT NOT NULL,
         textureMean FLOAT NOT NULL,
-        medicalImage BYTEA,
-        results VARCHAR (20) NOT NULL,
         diagnosis VARCHAR (100),
         dateOfClosure TIMESTAMP
         );
         
+        GRANT INSERT, UPDATE ON TABLE joint_table TO {role};
         GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE {table} TO {role};
         GRANT USAGE, SELECT ON SEQUENCE {colSeq} TO {role};
         """).format(
@@ -111,17 +126,27 @@ class RDSdatabase:
     
     def addPatientData(self,userName, userPassword, organisationName, firstName,lastName,DOB,date_of_service,area_code,phoneNum,is_left_breast,is_implant,
                        density,remarks,concavity_mean,concavity_SE,area_mean,area_SE,area_worst,symmetry_mean,
-                       texture_mean,results, medical_image=None,diagnosis=None,date_of_closure=None):
+                       texture_mean,diagnosis=None,date_of_closure=None):
         currentUserEngine, currentUserCursor = self.userSignIn(userName, userPassword)
         userTableName = self.mapOrganisationNameToTableName(organisationName)
 
         #adding the compulsory attributes first 
         sqlQuery = sql.SQL("""
-        INSERT INTO {table} (firstName,lastName,dateOfBirth,dateOfService,areaCode,phoneNumber,isLeftBreast,isImplant,density,remarks,concavityMean,concavitySE,areaMean,areaSE,areaWorst,symmetryMean,textureMean,results) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);
-        SELECT * FROM {table}
+        INSERT INTO {table} (firstName,lastName,dateOfBirth,dateOfService,areaCode,phoneNumber,isLeftBreast,isImplant,density,remarks,concavityMean,concavitySE,areaMean,areaSE,areaWorst,symmetryMean,textureMean,diagnosis,date_of_closure) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);
+        SELECT * FROM {table};
         """).format(table=sql.Identifier(userTableName))
-        currentUserCursor.execute(sqlQuery, (firstName,lastName,DOB,date_of_service,area_code,phoneNum,is_left_breast,is_implant,density,remarks,concavity_mean,concavity_SE,area_mean,area_SE,area_worst,symmetry_mean,texture_mean,results))
+        currentUserCursor.execute(sqlQuery, (firstName,lastName,DOB,date_of_service,area_code,phoneNum,is_left_breast,is_implant,density,remarks,concavity_mean,concavity_SE,area_mean,area_SE,area_worst,symmetry_mean,texture_mean,diagnosis,date_of_closure))
         return currentUserCursor.fetchall(), currentUserEngine, currentUserCursor
+    
+    def saveCloseCaseInDatabase(self, userName, userPassword, is_left_breast,is_implant,
+                       density,remarks,concavity_mean,concavity_SE,area_mean,area_SE,area_worst,symmetry_mean,
+                       texture_mean,diagnosis,date_of_closure):
+        currentUserEngine, currentUserCursor = self.userSignIn(userName, userPassword)
+        sqlQuery = sql.SQL("""
+        INSERT INTO joint_table (isLeftBreast,isImplant,density,remarks,concavityMean,concavitySE,areaMean,areaSE,areaWorst,symmetryMean,textureMean,diagnosis,dateOfClosure) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);
+        """)
+        currentUserCursor.execute(sqlQuery, (is_left_breast,is_implant,density,remarks,concavity_mean,concavity_SE,area_mean,area_SE,area_worst,symmetry_mean,texture_mean,diagnosis,date_of_closure))
+        return currentUserEngine, currentUserCursor
 
     def removeUser(self, userName):
         self.masterCursor.execute(sql.SQL("DROP USER IF EXISTS {user};").format(user=sql.Identifier(userName)))
