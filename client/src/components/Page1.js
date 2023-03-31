@@ -3,6 +3,7 @@ import Wrapper from "../pages/wrappers/Login";
 import FormRow from "./FormRow";
 import DateInput from "./DateInput";
 import AreaCodes from "./AreaCodes";
+import moment from "moment";
 
 export default function Page1({ nextStep, handleChange, values, setValues }) {
     console.log(values);

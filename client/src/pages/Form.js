@@ -2,14 +2,15 @@ import React, { useState } from "react";
 import Page1 from "../components/Page1";
 import Page2 from "../components/Page2";
 import Page3 from "../components/Page3";
+import moment from "moment";
 
 const initialState = {
     step: 1,
     patientID: "",
     patientFirstName: "",
     patientLastName: "",
-    dob: "",
-    dos: "",
+    dob: moment(),
+    dos: moment(),
     areaCode: "65",
     phoneNumber: "",
     isLeft: true,
@@ -24,10 +25,9 @@ const initialState = {
     areaWorst: "",
     symmetryMean: "",
     textureMean: "",
-    // medicalImage: null,
     prediction: null,
     diagnosis: "",
-    doc: "",
+    doc: moment(),
 };
 
 export default function Form() {

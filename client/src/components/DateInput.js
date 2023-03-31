@@ -9,6 +9,10 @@ const DateInput = ({ className, selected, handleChange, labelText }) => {
                 className="form-input"
                 selected={selected}
                 onChange={handleChange}
+                showMonthDropdown
+                showYearDropdown
+                dropdownMode="select"
+                maxDate={new Date()}
                 required
             />
         </div>
