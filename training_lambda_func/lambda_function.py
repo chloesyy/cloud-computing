@@ -10,7 +10,7 @@ print('Loading function')
 
 def lambda_handler(event, context):
     
-    instance_id = 'i-0dda0663457c3f233'
+    instance_id = 'i-054765dc33dc4ffc3'
     
     # from s3 get pem file for authentication
     s3_client = boto3.resource('s3',region_name='XXXXXXXXXXX',aws_access_key_id = 'XXXXXXXXXXXXXXXXX',aws_secret_access_key = 'XXXXXXXXXXXXXXXXXXXX',aws_session_token = 'XXXXXXXXXXXXXXXXX')

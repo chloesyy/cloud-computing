@@ -72,11 +72,11 @@ if __name__ == "__main__":
 
 
     # Initiate connection to rds
-    RDS = RDSdatabase(masterUserName = 'postgres', masterPassword = 123456789, rdsHostName = 'database-2.cji9asuwmz4i.us-east-1.rds.amazonaws.com', rdsDBName= 'postgres', rdsPort=5432)
-
+    RDS = RDSdatabase(masterUserName = 'masteruser', masterPassword = "hishmaster123", rdsHostName = 'hish-db-01.cfwyts8tlkjs.us-east-1.rds.amazonaws.com', rdsDBName= 'postgres', rdsPort=5432)
+    #RDS = RDSdatabase(masterUserName = 'postgres', masterPassword = 123456789, rdsHostName = 'database-2.cji9asuwmz4i.us-east-1.rds.amazonaws.com', rdsDBName= 'postgres', rdsPort=5432)
 
     # Create table
-    RDS.createNewTable()
+    #RDS.createNewTable()
 
     #insert_csv
     RDS.insert_csv(df)
