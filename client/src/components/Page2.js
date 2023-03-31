@@ -14,6 +14,7 @@ export default function Page2({
 }) {
     console.log(values);
 
+
     const setNumber = (e) => {
         const result = e.target.value.replace(/\D/g, "");
         setValues({ ...values, [e.target.name]: result });
