@@ -2,7 +2,7 @@ import json
 import boto3
 import pickle
 from flask_cors import CORS
-from database.RDSdatabase import RDSdatabase
+# from database.RDSdatabase import RDSdatabase
 from flask import Flask, request, jsonify
 import numpy as np
 
