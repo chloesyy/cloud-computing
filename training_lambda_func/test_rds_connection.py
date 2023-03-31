@@ -45,13 +45,14 @@ class RDSdatabase:
         cols_names = ','.join(df.columns)
         
         
-        sql  = "INSERT INTO PATIENT ({sql_cols}) VALUES ({placeholders})".format(sql_cols = ", ".join([i for i in df.columns]), 
-            placeholders = ", ".join(["%s" for i in df.columns]))
+        #sql  = "INSERT INTO PATIENT ({sql_cols}) VALUES ({placeholders})".format(sql_cols = ", ".join([i for i in df.columns]), placeholders = ", ".join(["%s" for i in df.columns]))
+        sql  = "INSERT INTO joint_table ({sql_cols}) VALUES ({placeholders})".format(sql_cols = ", ".join([i for i in df.columns]), placeholders = ", ".join(["%s" for i in df.columns]))
                     
         self.masterCursor.executemany(sql, df.values.tolist())
 
     def show_all(self):
-        q = sql.SQL('''SELECT * FROM PATIENT''')
+        #q = sql.SQL('''SELECT * FROM PATIENT''')
+        q = sql.SQL('''SELECT * FROM joint_table;''')
         self.masterCursor.execute(q)
         print(self.masterCursor.fetchall()[:10])
         
@@ -68,15 +69,13 @@ if __name__ == "__main__":
 
     # Read data
     df = pd.read_csv('data_interest.csv').drop(['Unnamed: 0','id'],axis=1)
-    #df['diagnosis'] = df['diagnosis'].map({'B': 0, 'M': 1})
-
-
+    
     # Initiate connection to rds
-    RDS = RDSdatabase(masterUserName = 'postgres', masterPassword = 123456789, rdsHostName = 'database-2.cji9asuwmz4i.us-east-1.rds.amazonaws.com', rdsDBName= 'postgres', rdsPort=5432)
-
+    RDS = RDSdatabase(masterUserName = 'masteruser', masterPassword = "hishmaster123", rdsHostName = 'hish-db-01.cfwyts8tlkjs.us-east-1.rds.amazonaws.com', rdsDBName= 'postgres', rdsPort=5432)
+    #RDS = RDSdatabase(masterUserName = 'postgres', masterPassword = 123456789, rdsHostName = 'database-2.cji9asuwmz4i.us-east-1.rds.amazonaws.com', rdsDBName= 'postgres', rdsPort=5432)
 
     # Create table
-    RDS.createNewTable()
+    #RDS.createNewTable()
 
     #insert_csv
     RDS.insert_csv(df)
@@ -84,6 +83,7 @@ if __name__ == "__main__":
     RDS.show_all()
 
 	#Convert to pandas
-    df_rds = pd.read_sql_query("""SELECT * FROM PATIENT""", RDS.masterEngine)
+    #df_rds = pd.read_sql_query("""SELECT * FROM PATIENT""", RDS.masterEngine)
+    df_rds = pd.read_sql_query("""SELECT * FROM joint_table""", RDS.masterEngine)
 	df_rds['diagnosis'] = df_rds['diagnosis'].map({'B': 0, 'M': 1})
 	print(df_rds.head())
