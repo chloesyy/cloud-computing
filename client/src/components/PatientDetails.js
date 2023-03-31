@@ -23,7 +23,7 @@ export default function PatientDetails({
         e.preventDefault();
 
         async function get_response() {
-            await fetch("/form", {
+            await fetch("/api/form", {
                 method: "POST",
                 cache: "no-cache",
                 headers: {

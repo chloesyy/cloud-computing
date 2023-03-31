@@ -37,7 +37,7 @@ export default function Login() {
 
         // For accessing RDS in the backend
         // async function get_response() {
-        //     await fetch("/login", {
+        //     await fetch("/api/login", {
         //         method: "POST",
         //         cache: "no-cache",
         //         headers: {

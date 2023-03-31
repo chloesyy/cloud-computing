@@ -47,7 +47,14 @@ s3.download_file(bucket_name, file_name, location)
 model = pickle.load(open(location, "rb"))
 
 ########################################### REACT REQUESTS ##############################################
-@app.route("/login", methods=['POST'])
+
+# NOTE: This route is needed for the default EB health check route
+@app.route('/')  
+def home():
+    return "ok"
+
+
+@app.route("/api/login", methods=['POST'])
 def login():
     username = request.get_json()["username"]
     password = request.get_json()["password"]
@@ -78,7 +85,7 @@ def login():
             "message": "Login Failed."
         }), 500
         
-@app.route("/form", methods=['POST'])
+@app.route("/api/form", methods=['POST'])
 def form():
     values = request.get_json()
     try:
@@ -92,7 +99,7 @@ def form():
             "message": "Login Failed."
         }), 500
         
-@app.route("/predict", methods=['POST'])
+@app.route("/api/predict", methods=['POST'])
 def predict():
     values = request.get_json()
     data = [[float(values['concavityMean']), 
