@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-import PatientDetails from "../components/PatientDetails";
-import MedicalInfo from "../components/MedicalInfo";
-import ClosingForm from "../components/ClosingForm";
+import Page1 from "../components/Page1";
+import Page2 from "../components/Page2";
+import Page3 from "../components/Page3";
 
 const initialState = {
     step: 1,
@@ -11,7 +10,7 @@ const initialState = {
     patientLastName: "",
     dob: "",
     dos: "",
-    areaCode: "",
+    areaCode: "65",
     phoneNumber: "",
     isLeft: true,
     isImplant: false,
@@ -32,13 +31,6 @@ const initialState = {
 };
 
 export default function Form() {
-    // const navigate = useNavigate();
-    // useEffect(() => {
-    //     if (!values.isAuthenticated) {
-    //         navigate('../login')
-    //     }
-    // }, []);
-
     const [values, setValues] = useState(initialState);
 
     const previousStep = (e) => {
@@ -54,7 +46,7 @@ export default function Form() {
     switch (values.step) {
         case 1:
             return (
-                <PatientDetails
+                <Page1
                     nextStep={nextStep}
                     previousStep={previousStep}
                     handleChange={handleChange}
@@ -64,7 +56,7 @@ export default function Form() {
             );
         case 2:
             return (
-                <MedicalInfo
+                <Page2
                     nextStep={nextStep}
                     previousStep={previousStep}
                     handleChange={handleChange}
@@ -74,7 +66,7 @@ export default function Form() {
             );
         case 3:
             return (
-                <ClosingForm
+                <Page3
                     nextStep={nextStep}
                     previousStep={previousStep}
                     handleChange={handleChange}

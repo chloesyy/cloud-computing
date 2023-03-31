@@ -2,7 +2,7 @@ import React from "react";
 import Wrapper from "../pages/wrappers/Login";
 import DateInput from "./DateInput";
 
-export default function ClosingForm({
+export default function Page3({
     nextStep,
     previousStep,
     handleChange,

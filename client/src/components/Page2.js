@@ -5,7 +5,7 @@ import FormRow from "./FormRow";
 // import DateInput from "./DateInput";
 import Predict from "./modal/Predict";
 
-export default function MedicalInfo({
+export default function Page2({
     nextStep,
     previousStep,
     handleChange,
@@ -13,27 +13,6 @@ export default function MedicalInfo({
     setValues,
 }) {
     console.log(values);
-
-    const onSubmit = (e) => {
-        e.preventDefault();
-
-        async function get_response() {
-            await fetch("/form", {
-                method: "POST",
-                cache: "no-cache",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(values),
-            }).then((response) => {
-                if (response.ok) {
-                    console.log("response worked!");
-                }
-            });
-        }
-
-        get_response();
-    };
 
     const setNumber = (e) => {
         const result = e.target.value.replace(/\D/g, "");
