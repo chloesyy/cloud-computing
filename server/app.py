@@ -2,6 +2,7 @@ import json
 import boto3
 import pickle
 from flask_cors import CORS
+from database.RDSdatabase import RDSdatabase
 from flask import Flask, request, jsonify
 import numpy as np
 
@@ -14,6 +15,17 @@ with open("config.json", "r") as f:
 AWS_ACCESS_KEY_ID = config['aws_credentials']['access_key_id']
 AWS_SECRET_ACCESS_KEY = config['aws_credentials']['secret_access_key']
 AWS_TOKEN = config['aws_credentials']['token']
+
+########################################### CONNECT TO RDS ################################################
+#not sure where to put this. Initial database configuration
+masterUserName = "masteruser"
+masterPassword = "hishmaster123"
+host = "hish-db-01.cfwyts8tlkjs.us-east-1.rds.amazonaws.com"
+dbName = "postgres"
+postgresPort = 5432
+rdsDB = RDSdatabase(masterUserName,masterPassword,host,dbName,postgresPort)
+#initial config
+rdsDB.initialConfig()
 
 ########################################### GET MODEL FOR PREDICTION ################################################
 # Credentials should already by setup in ec2 instance
@@ -35,7 +47,6 @@ s3.download_file(bucket_name, file_name, location)
 model = pickle.load(open(location, "rb"))
 
 ########################################### REACT REQUESTS ##############################################
-
 @app.route("/login", methods=['POST'])
 def login():
     username = request.get_json()["username"]
@@ -50,6 +61,11 @@ def login():
     # } else {
     #     # TODO: handle register
     # }
+    if not isLogin: 
+        #register user
+        rdsDB.createNewUser(username, password, organisation)
+    #user sign in 
+    userEngine, userCursor = rdsDB.userSignIn(username, password)
     
     try:
         return jsonify(
