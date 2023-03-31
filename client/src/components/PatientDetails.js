@@ -22,18 +22,22 @@ export default function PatientDetails({
     const onSubmit = (e) => {
         e.preventDefault();
 
-        const response = fetch("/form", {
-            credentials: "include",
-            method: "POST",
-            cache: "no-cache",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(values),
-        });
-        if (response.ok) {
-            console.log("response worked!");
+        async function get_response() {
+            await fetch("/form", {
+                method: "POST",
+                cache: "no-cache",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(values),
+            }).then((response) => {
+                if (response.ok) {
+                    console.log("response worked!");
+                }
+            });
         }
+
+        get_response();
     };
 
     const Continue = (e) => {
@@ -43,7 +47,7 @@ export default function PatientDetails({
 
     return (
         <Wrapper>
-            <form className="form" onSubmit={onSubmit}>
+            <form className="form" onSubmit={Continue}>
                 <h3>Patient Information</h3>
 
                 <FormRow
@@ -115,7 +119,11 @@ export default function PatientDetails({
                     handleChange={handleChange}
                 />
 
-                <button onClick={Continue} className="btn btn-block">
+                <button
+                    type="submit"
+                    // onClick={Continue}
+                    className="btn btn-block"
+                >
                     Next
                 </button>
             </form>

@@ -35,6 +35,7 @@ export default function Login() {
     const onSubmit = (e) => {
         e.preventDefault();
 
+        // For accessing RDS in the backend
         // async function get_response() {
         //     await fetch("/login", {
         //         method: "POST",
@@ -65,10 +66,14 @@ export default function Login() {
                 onSuccess: (data) => {
                     setValues({ ...values, isError: false });
                     console.log("onSuccess: ", data);
-                    navigate('../form', values);
+                    navigate("../form", values);
                 },
                 onFailure: (err) => {
-                    setValues({ ...values, isError: true, errorMessage: err.message});
+                    setValues({
+                        ...values,
+                        isError: true,
+                        errorMessage: err.message,
+                    });
                     console.error("onFailure: ", err);
                 },
                 newPasswordRequired: (data) => {
@@ -103,13 +108,23 @@ export default function Login() {
                 null,
                 (err, data) => {
                     if (err == null) {
-                        setValues({ ...values, isLogin: true, isError: false, errorMessage: "", password: ""});
+                        setValues({
+                            ...values,
+                            isLogin: true,
+                            isError: false,
+                            errorMessage: "",
+                            password: "",
+                        });
                     }
                     if (err) {
-                        setValues({ ...values, isError: true, errorMessage: err.message});
+                        setValues({
+                            ...values,
+                            isError: true,
+                            errorMessage: err.message,
+                        });
                         console.error(err);
                     }
-                    console.log(data)
+                    console.log(data);
                 }
             );
         }
@@ -136,13 +151,15 @@ export default function Login() {
                     handleChange={handleChange}
                 />
 
-
                 {!values.isLogin && (
                     <div>
                         <ul>
-                            <li>Password has to contain at least 10 characters</li>
-                            <li>Password includes the following:
-                                <ul className='inner-list'>
+                            <li>
+                                Password has to contain at least 10 characters
+                            </li>
+                            <li>
+                                Password includes the following:
+                                <ul className="inner-list">
                                     <li>An uppercase character</li>
                                     <li>A lowercase character</li>
                                     <li>A special character</li>
@@ -157,9 +174,15 @@ export default function Login() {
                             value={values.organisation}
                             onChange={handleChange}
                         >
-                            <option value="NUH">National University Health System (NUHS)</option>
-                            <option value="SGH">National Healthcare Group (NHG)</option>
-                            <option value="SingHealth">Singapore Health Services (SingHealth)</option>
+                            <option value="NUH">
+                                National University Health System (NUHS)
+                            </option>
+                            <option value="SGH">
+                                National Healthcare Group (NHG)
+                            </option>
+                            <option value="SingHealth">
+                                Singapore Health Services (SingHealth)
+                            </option>
                         </select>
                     </div>
                 )}
@@ -169,9 +192,11 @@ export default function Login() {
                 </button>
 
                 {values.isError && (
-                    <p className='error-message' style={{color: "red"}}>{values.errorMessage}</p>
+                    <p className="error-message" style={{ color: "red" }}>
+                        {values.errorMessage}
+                    </p>
                 )}
-                
+
                 <p>
                     {values.isLogin
                         ? "Not a member yet? "

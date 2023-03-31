@@ -17,21 +17,23 @@ export default function ClosingForm({
 
     const onSubmit = (e) => {
         e.preventDefault();
-        const { patientName, age, isFemale, isLeft, isImplant, density } =
-            values;
 
-        const response = fetch("/form", {
-            credentials: "include",
-            method: "POST",
-            cache: "no-cache",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(values),
-        });
-        if (response.ok) {
-            console.log("response worked!");
+        async function get_response() {
+            await fetch("/form", {
+                method: "POST",
+                cache: "no-cache",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(values),
+            }).then((response) => {
+                if (response.ok) {
+                    console.log("response worked!");
+                }
+            });
         }
+
+        get_response();
     };
 
     const Previous = (e) => {
@@ -43,13 +45,14 @@ export default function ClosingForm({
         <Wrapper>
             <form className="form" onSubmit={onSubmit}>
                 <h3>Patient Information</h3>
-                <div>
+                <div className="form-row">
                     <label className="form-label">Final Diagnosis</label>
                     <select
                         className="form-select"
                         name="diagnosis"
                         value={values.diagnosis}
                         onChange={handleChange}
+                        required
                     >
                         <option value="Positive">Positive</option>
                         <option value="Negative">Negative</option>

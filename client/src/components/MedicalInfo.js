@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import Wrapper from "../pages/wrappers/Login";
 import FormRow from "./FormRow";
-import Checkbox from "./Checkbox";
-import DateInput from "./DateInput";
-import Modal from "./modal/Modal";
+// import Checkbox from "./Checkbox";
+// import DateInput from "./DateInput";
+import Predict from "./modal/Predict";
 
 export default function MedicalInfo({
     nextStep,
@@ -17,25 +17,29 @@ export default function MedicalInfo({
     const onSubmit = (e) => {
         e.preventDefault();
 
-        const response = fetch("/form", {
-            credentials: "include",
-            method: "POST",
-            cache: "no-cache",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(values),
-        });
-        if (response.ok) {
-            console.log("response worked!");
+        async function get_response() {
+            await fetch("/form", {
+                method: "POST",
+                cache: "no-cache",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(values),
+            }).then((response) => {
+                if (response.ok) {
+                    console.log("response worked!");
+                }
+            });
         }
+
+        get_response();
     };
 
-    const Predict = (e) => {
-        e.preventDefault();
-        console.log("Predicting...");
-        // TODO: PREDICTION OF MODEL HERE
+    const setNumber = (e) => {
+        const result = e.target.value.replace(/\D/g, "");
+        setValues({ ...values, [e.target.name]: result });
     };
+
     const Previous = (e) => {
         e.preventDefault();
         previousStep();
@@ -47,79 +51,86 @@ export default function MedicalInfo({
 
     return (
         <Wrapper>
-            <form className="form" onSubmit={onSubmit}>
+            <form className="form" onSubmit={Continue}>
                 <h3>Medical Information</h3>
                 <FormRow
-                    type="number"
+                    type="text"
                     name="concavityMean"
                     labelText="Concavity Mean"
                     value={values.concavityMean}
-                    handleChange={handleChange}
+                    handleChange={setNumber}
                 />
                 <FormRow
-                    type="number"
+                    type="text"
                     name="concavitySE"
                     labelText="Concavity SE"
                     value={values.concavitySE}
-                    handleChange={handleChange}
+                    handleChange={setNumber}
                 />
                 <FormRow
-                    type="number"
+                    type="text"
+                    name="concavityWorst"
+                    labelText="Concavity Worst"
+                    value={values.concavityWorst}
+                    handleChange={setNumber}
+                />
+                <FormRow
+                    type="text"
                     name="areaMean"
                     labelText="Area Mean"
                     value={values.areaMean}
-                    handleChange={handleChange}
+                    handleChange={setNumber}
                 />
                 <FormRow
-                    type="number"
+                    type="text"
                     name="areaSE"
                     labelText="Area SE"
                     value={values.areaSE}
-                    handleChange={handleChange}
+                    handleChange={setNumber}
                 />
                 <FormRow
-                    type="number"
+                    type="text"
                     name="areaWorst"
                     labelText="Area Worst"
                     value={values.areaWorst}
-                    handleChange={handleChange}
+                    handleChange={setNumber}
                 />
                 <FormRow
-                    type="number"
+                    type="text"
                     name="symmetryMean"
                     labelText="Symmetry Mean"
                     value={values.symmetryMean}
-                    handleChange={handleChange}
+                    handleChange={setNumber}
                 />
                 <FormRow
-                    type="number"
+                    type="text"
                     name="textureMean"
                     labelText="Texture Mean"
                     value={values.textureMean}
-                    handleChange={handleChange}
+                    handleChange={setNumber}
                 />
-                <FormRow
+                {/* <FormRow
                     type="file"
                     name="medicalImage"
                     labelText="Medical Image"
                     value={values.medicalImage}
                     handleChange={handleChange}
-                />
-                <FormRow
+                /> */}
+                {/* <FormRow
                     type="text"
                     name="results"
-                    labelText="Results"
-                    value={values.results}
-                    handleChange={handleChange}
-                />
+                    labelText="Prediction"
+                    value={values.prediction}
+                    // handleChange={handleChange}
+                /> */}
 
-                <Modal onClick={Predict} />
+                <Predict values={values} setValues={setValues} />
 
                 <div className="form-container">
                     <button onClick={Previous} className="btn btn-block">
                         Back
                     </button>
-                    <button onClick={Continue} className="btn btn-block">
+                    <button type="submit" className="btn btn-block">
                         Next
                     </button>
                 </div>
