@@ -22,6 +22,7 @@ const FormRow = ({
                 name={name}
                 onChange={handleChange}
                 className="form-input"
+                required
             />
             {subText && <small htmlFor={name}>{subText}</small>}
         </div>

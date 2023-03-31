@@ -16,22 +16,22 @@ const initialState = {
     isLeft: true,
     isImplant: false,
     density: "A",
-    remarks: "",
+    remarks: "NIL",
     concavityMean: "",
     concavitySE: "",
+    concavityWorst: "",
     areaMean: "",
     areaSE: "",
     areaWorst: "",
     symmetryMean: "",
     textureMean: "",
-    medicalImage: "",
-    results: "",
+    // medicalImage: null,
+    prediction: null,
     diagnosis: "",
     doc: "",
 };
 
 export default function Form() {
-
     // const navigate = useNavigate();
     // useEffect(() => {
     //     if (!values.isAuthenticated) {
@@ -85,6 +85,6 @@ export default function Form() {
         default:
     }
 
-        // }
+    // }
     // };
 }
