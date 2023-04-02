@@ -21,6 +21,7 @@ export default function Predict({ values, setValues }) {
                 cache: "no-cache",
                 headers: {
                     "Content-Type": "application/json",
+                    "Accept": "application/json"
                 },
                 body: JSON.stringify(values),
             })
