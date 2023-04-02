@@ -2,7 +2,7 @@ import json
 import boto3
 import pickle
 from flask_cors import CORS
-# from database.RDSdatabase import RDSdatabase
+from database.RDSdatabase import RDSdatabase
 from flask import Flask, request, jsonify
 import numpy as np
 
@@ -13,12 +13,12 @@ with open("config.json", "r") as f:
     config = json.load(f)
 
 ########################################### CONNECT TO RDS ################################################
-# rdsDB = RDSdatabase(config['rds']['username'],
-#                     config['rds']['password'],
-#                     config['rds']['host'],
-#                     config['rds']['dbname'],
-#                     config['rds']['port'])
-# rdsDB.initialConfig()   # initial config
+rdsDB = RDSdatabase(config['rds']['username'],
+                    config['rds']['password'],
+                    config['rds']['host'],
+                    config['rds']['dbname'],
+                    config['rds']['port'])
+rdsDB.initialConfig()   # initial config
 
 ########################################### GET MODEL FOR PREDICTION ################################################
 # Credentials should already by setup in ec2 instance
@@ -61,11 +61,11 @@ def login():
     # } else {
     #     # TODO: handle register
     # }
-    # if not isLogin: 
+    if not isLogin: 
     #     #register user
-    #     rdsDB.createNewUser(username, password, organisation)
+        rdsDB.createNewUser(username, password, organisation)
     # #user sign in 
-    # userEngine, userCursor = rdsDB.userSignIn(username, password)
+    userEngine, userCursor = rdsDB.userSignIn(username, password)
     
     try:
         return jsonify(
@@ -77,10 +77,38 @@ def login():
         return jsonify({
             "message": "Login Failed."
         }), 500
+    
         
 @app.route("/api/form", methods=['POST'])
 def form():
     values = request.get_json()
+    patientDetails = {
+    "patientID": values['patientID'],
+    "firstName": values['patientFirstName'],
+    "lastName": values['patientLastName'],
+    "DOB": values['dob'],
+    "date_of_service": values['dos'],
+    "area_code": values['areaCode'],
+    "phoneNum": values['phoneNumber'],
+    "is_left_breast": values['isLeft'],
+    "is_implant": values['isImplant'],
+    "density": values['density'],
+    "remarks": values['remarks'],
+    "concavity_mean": values['concavityMean'],
+    "concavity_SE": values['concavitySE'],
+    "concavity_Worst": values['concavityWorst'],
+    "area_mean": values['areaMean'],
+    "area_SE": values['areaSE'],
+    "area_worst": values['areaWorst'],
+    "symmetry_mean": values['symmetryMean'],
+    "texture_mean": values['textureMean'],
+    "diagnosis": values['diagnosis'],
+    "date_of_closure": values['date_of_closure']
+}
+    #to get username and password
+    username = None
+    password = None
+    rdsDB.addPatientData(username, password,**patientDetails)
     
     # TODO: use this to update the RDS database!
     # variable names can be found on Form.js 
@@ -94,6 +122,8 @@ def form():
         return jsonify({
             "message": "Login Failed."
         }), 500
+    
+    #insert data 
         
 @app.route("/api/predict", methods=['POST'])
 def predict():
