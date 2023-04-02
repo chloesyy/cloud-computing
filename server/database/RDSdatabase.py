@@ -26,6 +26,23 @@ class RDSdatabase:
         password VARCHAR (50) NOT NULL,
         organisationName VARCHAR (100) NOT NULL
         );
+
+        CREATE TABLE joint_table (
+        entryID SERIAL PRIMARY KEY,
+        isLeftBreast BOOLEAN NOT NULL,
+        isImplant BOOLEAN NOT NULL,
+        density VARCHAR(1) NOT NULL,
+        remarks VARCHAR(100) NOT NULL,
+        concavityMean FLOAT NOT NULL,
+        concavitySE FLOAT NOT NULL,
+        areaMean FLOAT NOT NULL,
+        areaSE FLOAT NOT NULL,
+        areaWorst FLOAT NOT NULL,
+        symmetryMean FLOAT NOT NULL,
+        textureMean FLOAT NOT NULL,
+        diagnosis VARCHAR (100) NOT NULL,
+        dateOfClosure TIMESTAMP NOT NULL
+        );
         """)
 
         self.masterCursor.execute(sqlQuery)
@@ -35,7 +52,6 @@ class RDSdatabase:
 
     def createNewOrganisation(self, organisationName):
         newTableName = self.mapOrganisationNameToTableName(organisationName)
-        colSeqName = f"{newTableName}_patientid_seq"
 
         #TO-DO: update schema
         sqlQuery = sql.SQL("""
@@ -43,7 +59,7 @@ class RDSdatabase:
         GRANT CONNECT ON DATABASE {dbName} TO {role};
 
         CREATE TABLE {table} (
-        patientid SERIAL PRIMARY KEY,
+        patientid VARCHAR (20) PRIMARY KEY,
         firstName VARCHAR (50) NOT NULL,
         lastName VARCHAR (50) NOT NULL,
         dateOfBirth TIMESTAMP NOT NULL,
@@ -61,19 +77,17 @@ class RDSdatabase:
         areaWorst FLOAT NOT NULL,
         symmetryMean FLOAT NOT NULL,
         textureMean FLOAT NOT NULL,
-        medicalImage BYTEA,
-        results VARCHAR (20) NOT NULL,
         diagnosis VARCHAR (100),
         dateOfClosure TIMESTAMP
         );
         
+        GRANT INSERT, UPDATE ON TABLE joint_table TO {role};
         GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE {table} TO {role};
-        GRANT USAGE, SELECT ON SEQUENCE {colSeq} TO {role};
+        GRANT USAGE, SELECT ON SEQUENCE joint_table_entryID_seq TO {role};
         """).format(
                 role=sql.Identifier(organisationName),
                 table=sql.Identifier(newTableName),
-                dbName=sql.Identifier(self.databaseName),
-                colSeq=sql.Identifier(colSeqName)
+                dbName=sql.Identifier(self.databaseName)
         )
         self.masterCursor.execute(sqlQuery)
 
@@ -102,26 +116,54 @@ class RDSdatabase:
         userCursor = userEngine.cursor()
         userEngine.autocommit = True
         return userEngine, userCursor
+    
+    def findOrganisationNameFromUserCredentials(self, userName, userPassword):
+        sqlQuery = sql.SQL("SELECT organisationName FROM userDetails WHERE userName=%s AND password=%s")
+        self.masterCursor.execute(sqlQuery, (userName, userPassword))
+        sqlResult = self.masterCursor.fetchall()
+        return sqlResult[0][0]
 
-    def userViewTable(self, userName, userPassword, organisationName):
+    def userViewTable(self, userName, userPassword):
         currentUserEngine, currentUserCursor = self.userSignIn(userName, userPassword)
+        organisationName = self.findOrganisationNameFromUserCredentials(userName, userPassword)
         userTableName = self.mapOrganisationNameToTableName(organisationName)
         currentUserCursor.execute(sql.SQL("SELECT * FROM {table};").format(table=sql.Identifier(userTableName)))
         return currentUserCursor.fetchall(), currentUserEngine, currentUserCursor
     
-    def addPatientData(self,userName, userPassword, organisationName, firstName,lastName,DOB,date_of_service,area_code,phoneNum,is_left_breast,is_implant,
+    def addPatientData(self,userName, userPassword, patientID, firstName,lastName,DOB,date_of_service,area_code,phoneNum,is_left_breast,is_implant,
                        density,remarks,concavity_mean,concavity_SE,area_mean,area_SE,area_worst,symmetry_mean,
-                       texture_mean,results, medical_image=None,diagnosis=None,date_of_closure=None):
+                       texture_mean,diagnosis=None,date_of_closure=None):
         currentUserEngine, currentUserCursor = self.userSignIn(userName, userPassword)
+        organisationName = self.findOrganisationNameFromUserCredentials(userName, userPassword)
         userTableName = self.mapOrganisationNameToTableName(organisationName)
 
         #adding the compulsory attributes first 
         sqlQuery = sql.SQL("""
-        INSERT INTO {table} (firstName,lastName,dateOfBirth,dateOfService,areaCode,phoneNumber,isLeftBreast,isImplant,density,remarks,concavityMean,concavitySE,areaMean,areaSE,areaWorst,symmetryMean,textureMean,results) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);
-        SELECT * FROM {table}
+        INSERT INTO {table} (patientID,firstName,lastName,dateOfBirth,dateOfService,areaCode,phoneNumber,isLeftBreast,isImplant,density,remarks,concavityMean,concavitySE,areaMean,areaSE,areaWorst,symmetryMean,textureMean,diagnosis,dateOfClosure) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);
+        SELECT * FROM {table};
         """).format(table=sql.Identifier(userTableName))
-        currentUserCursor.execute(sqlQuery, (firstName,lastName,DOB,date_of_service,area_code,phoneNum,is_left_breast,is_implant,density,remarks,concavity_mean,concavity_SE,area_mean,area_SE,area_worst,symmetry_mean,texture_mean,results))
+        currentUserCursor.execute(sqlQuery, (patientID,firstName,lastName,DOB,date_of_service,area_code,phoneNum,is_left_breast,is_implant,density,remarks,concavity_mean,concavity_SE,area_mean,area_SE,area_worst,symmetry_mean,texture_mean,diagnosis,date_of_closure))
         return currentUserCursor.fetchall(), currentUserEngine, currentUserCursor
+    
+    def fetchPatientDataByPatientID(self,currentUserCursor,organisationTableName,patientID):
+        sqlQuery = sql.SQL("""
+        SELECT isLeftBreast,isImplant,density,remarks,concavityMean,concavitySE,areaMean,areaSE,areaWorst,symmetryMean,textureMean FROM {table} WHERE patientid=%s
+        """).format(table=sql.Identifier(organisationTableName))
+        currentUserCursor.execute(sqlQuery, (patientID,))
+        patientData = currentUserCursor.fetchall()[0]
+        return patientData
+    
+    def updateDiagnosis(self, userName, userPassword, patientID,diagnosis,date_of_closure):
+        currentUserEngine, currentUserCursor = self.userSignIn(userName, userPassword)
+        organisationName = self.findOrganisationNameFromUserCredentials(userName, userPassword)
+        userTableName = self.mapOrganisationNameToTableName(organisationName)
+        (is_left_breast,is_implant,density,remarks,concavity_mean,concavity_SE,area_mean,area_SE,area_worst,symmetry_mean,texture_mean) = self.fetchPatientDataByPatientID(currentUserCursor,userTableName,patientID)
+        sqlQuery = sql.SQL("""
+        INSERT INTO joint_table (isLeftBreast,isImplant,density,remarks,concavityMean,concavitySE,areaMean,areaSE,areaWorst,symmetryMean,textureMean,diagnosis,dateOfClosure) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);
+        UPDATE {table} SET diagnosis=%s, dateOfClosure=%s WHERE patientid=%s;
+        """).format(table=sql.Identifier(userTableName))
+        currentUserCursor.execute(sqlQuery, (is_left_breast,is_implant,density,remarks,concavity_mean,concavity_SE,area_mean,area_SE,area_worst,symmetry_mean,texture_mean,diagnosis,date_of_closure,diagnosis,date_of_closure,patientID))
+        return currentUserEngine, currentUserCursor
 
     def removeUser(self, userName):
         self.masterCursor.execute(sql.SQL("DROP USER IF EXISTS {user};").format(user=sql.Identifier(userName)))
