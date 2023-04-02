@@ -29,32 +29,6 @@ const initialState = {
     doc: null,
 };
 
-const startingState = {
-    step: 1,
-    patientID: "",
-    patientFirstName: "",
-    patientLastName: "",
-    dob: null,
-    dos: null,
-    areaCode: "65",
-    phoneNumber: "",
-    isLeft: true,
-    isImplant: false,
-    density: "A",
-    remarks: "NIL",
-    concavityMean: "",
-    concavitySE: "",
-    concavityWorst: "",
-    areaMean: "",
-    areaSE: "",
-    areaWorst: "",
-    symmetryMean: "",
-    textureMean: "",
-    prediction: null,
-    diagnosis: "",
-    doc: null,
-}; // copy of the initial state which will be used to clear all entries
-
 export default function Form() {
     const [values, setValues] = useState(initialState);
 

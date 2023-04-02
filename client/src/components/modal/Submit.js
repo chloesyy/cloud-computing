@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import close from "../images/close.png";
 import tick from "../images/tick.png";
-import "./Submit.css";
+import "./submit.css";
 
-export default function Submit({ values, setValues, routeBack }) {
+export default function Submit({ values, setValues}) {
     const [modal, setModal] = useState(false);
     const [status, setStatus] = useState(''); 
     const navigate = useNavigate();
@@ -24,17 +24,42 @@ export default function Submit({ values, setValues, routeBack }) {
           })
               .then((response) => response.json())
               .then((data) => {
-                  setStatus("Patient details have been successfully submitted!")
-                  routeBack()
+                  setStatus("Patient details have been successfully stored!")
                   console.log(data);
               });
       }
       get_response();
       setModal(!modal);
-  };
+    };
 
     const toggleModal = () => {
         setModal(!modal);
+        setValues({
+            step: 1,
+            patientID: "",
+            patientFirstName: "",
+            patientLastName: "",
+            dob: null,
+            dos: null,
+            areaCode: "65",
+            phoneNumber: "",
+            isLeft: true,
+            isImplant: false,
+            density: "A",
+            remarks: "NIL",
+            concavityMean: "",
+            concavitySE: "",
+            concavityWorst: "",
+            areaMean: "",
+            areaSE: "",
+            areaWorst: "",
+            symmetryMean: "",
+            textureMean: "",
+            prediction: null,
+            diagnosis: "",
+            doc: null,
+        });
+        document.body.classList.remove("active-modal");
     };
 
     //   prevent scrolling when modal active

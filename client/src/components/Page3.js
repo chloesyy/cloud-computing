@@ -77,7 +77,7 @@ export default function Page3({
                     {/* <button type="submit" className="btn btn-block">
                         Submit
                     </button> */}
-                    <Submit onClick={Previous}/>
+                    <Submit values={values} setValues={setValues}/>
                 </div>
             </form>
         </Wrapper>
