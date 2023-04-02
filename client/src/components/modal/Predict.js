@@ -16,7 +16,7 @@ export default function Predict({ values, setValues }) {
         setPrediction(null);
 
         async function get_response() {
-            await fetch("/predict", {
+            await fetch("/api/predict", {
                 method: "POST",
                 cache: "no-cache",
                 headers: {

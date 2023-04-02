@@ -1,7 +1,18 @@
 {
-    "s3": {
+    "aws_credentials": {
         "access_key_id": "",
         "secret_access_key": "",
         "token": ""
+    },
+    "s3": {
+        "bucket_name": "",
+        "file_path": ""
+    },
+    "rds": {
+        "username": "",
+        "password": "",
+        "host": "",
+        "dbname": "postgres",
+        "port": 5432
     }
 }
