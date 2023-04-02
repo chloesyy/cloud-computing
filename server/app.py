@@ -40,7 +40,9 @@ s3.download_file(bucket_name, file_name, location)
 model = pickle.load(open(location, "rb"))
 
 ########################################### REACT REQUESTS ##############################################
-
+USERNAME = None
+PASSWORD = None
+ORGANISATION = None
 # NOTE: This route is needed for the default EB health check route
 @app.route('/')  
 def home():
@@ -49,11 +51,12 @@ def home():
 
 @app.route("/api/login", methods=['POST'])
 def login():
-    username = request.get_json()["username"]
-    password = request.get_json()["password"]
-    organisation = request.get_json()["organisation"]
+    global USERNAME, PASSWORD
+    USERNAME = request.get_json()["username"]
+    PASSWORD = request.get_json()["password"]
+    ORGANISATION = request.get_json()["organisation"]   # Only avaiable for sign up
     isLogin = request.get_json()["isLogin"]
-    print(username, password)
+    print(USERNAME, PASSWORD, ORGANISATION)
     
     # TODO: use this portion for sql codes!
     # if (isLogin) {
@@ -81,6 +84,8 @@ def login():
 @app.route("/api/form", methods=['POST'])
 def form():
     values = request.get_json()
+    
+    # access username and password by USERNAME and PASSWORD
     
     # TODO: use this to update the RDS database!
     # variable names can be found on Form.js 
