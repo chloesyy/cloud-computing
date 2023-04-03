@@ -83,7 +83,6 @@ export default function Submit({ values, setValues}) {
                 <div className="modal">
                     <div onClick={toggleModal} className="overlay"></div>
                     <div className="modal-content">
-                        {/* <img src={tick}></img> */}
                         <p>{status}</p>
                         <input
                             type="image"
