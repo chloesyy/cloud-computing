@@ -2,7 +2,7 @@ import json
 import boto3
 import pickle
 from flask_cors import CORS
-# from database.RDSdatabase import RDSdatabase
+from database.RDSdatabase import RDSdatabase
 from flask import Flask, request, jsonify
 import numpy as np
 
@@ -13,18 +13,26 @@ with open("config.json", "r") as f:
     config = json.load(f)
 
 ########################################### CONNECT TO RDS ################################################
-# rdsDB = RDSdatabase(config['rds']['username'],
-#                     config['rds']['password'],
-#                     config['rds']['host'],
-#                     config['rds']['dbname'],
-#                     config['rds']['port'])
-# rdsDB.initialConfig()   # initial config
+rdsDB = RDSdatabase(config['rds']['username'],
+                    config['rds']['password'],
+                    config['rds']['host'],
+                    config['rds']['dbname'],
+                    config['rds']['port'])
+rdsDB.initialConfig()
+try:
+    rdsDB.initialConfig()
+    # rdsDB.createNewOrganisation('NUH')
+    # rdsDB.createNewOrganisation('SGH')
+    # rdsDB.createNewOrganisation('SingHealth')
+    print('RDS(es) set up successfully.')
+except: 
+    print('RDS has already been set up.')
 
+# query = 'SELECT * FROM userDetails'
+# a = rdsDB.masterCursor.execute(query)
+# print(a)
 ########################################### GET MODEL FOR PREDICTION ################################################
-# Credentials should already by setup in ec2 instance
-# If running locally, credentials can be found by starting AWS Learner's Lab and typing:
-# cat ~/.aws/credentials 
-# in the console
+
 s3_session = boto3.Session(
     aws_access_key_id = config['aws_credentials']['access_key_id'],
     aws_secret_access_key = config['aws_credentials']['secret_access_key'],
@@ -43,6 +51,7 @@ model = pickle.load(open(location, "rb"))
 USERNAME = None
 PASSWORD = None
 ORGANISATION = None
+
 # NOTE: This route is needed for the default EB health check route
 @app.route('/')  
 def home():
@@ -54,22 +63,20 @@ def login():
     global USERNAME, PASSWORD
     USERNAME = request.get_json()["username"]
     PASSWORD = request.get_json()["password"]
-    ORGANISATION = request.get_json()["organisation"]   # Only avaiable for sign up
+    ORGANISATION = request.get_json()["organisation"] 
     isLogin = request.get_json()["isLogin"]
-    print(USERNAME, PASSWORD, ORGANISATION)
+    print('USERINFO', USERNAME, PASSWORD, ORGANISATION)
     
-    # TODO: use this portion for sql codes!
-    # if (isLogin) {
-    #     # TODO: handle login
-    # } else {
-    #     # TODO: handle register
-    # }
-    # if not isLogin: 
-    #     #register user
-    #     rdsDB.createNewUser(username, password, organisation)
-    # #user sign in 
-    # userEngine, userCursor = rdsDB.userSignIn(username, password)
-    
+    if isLogin:
+        try:
+            rdsDB.userSignIn(USERNAME, PASSWORD)
+            print('Login successful.')
+        except:
+            print(f'Failed to authenticate user {USERNAME}.')
+    else:
+        rdsDB.createNewUser(USERNAME, PASSWORD, ORGANISATION)
+        print('New user created.')
+
     try:
         return jsonify(
             {
@@ -83,9 +90,35 @@ def login():
         
 @app.route("/api/form", methods=['POST'])
 def form():
-    # values = request.get_json()
+    print(USERNAME, PASSWORD)
+    values = request.get_json()
+
+    rdsDB.addPatientData(USERNAME, 
+                         PASSWORD, 
+                         values['patientID'], 
+                         values['patientFirstName'],
+                         values['patientLastName'],
+                         values['dob'],
+                         values['dos'], 
+                         values['areaCode'], 
+                         values['phoneNumber'], 
+                         values['remarks'],
+                         values['concavityMean'],
+                         values['concavitySE'],
+                         values['concavityWorst'],
+                         values['areaMean'],
+                         values['areaSE'],
+                         values['areaWorst'],
+                         values['symmetryMean'],
+                         values['textureMean'],
+                         values['prediction'],
+                         values['diagnosis'],
+                         values['doc']
+                        )
     
-    # access username and password by USERNAME and PASSWORD
+    # def addPatientData(self, userName, userPassword, patientID, firstName, lastName, DOB, date_of_service, area_code, phoneNum, 
+    #                    remarks, concavity_mean, concavity_SE, concavity_worst, area_mean, area_SE, area_worst, symmetry_mean,
+    #                    texture_mean, prediction, diagnosis=None, date_of_closure=None):
     
     # TODO: use this to update the RDS database!
     # variable names can be found on Form.js 
