@@ -43,7 +43,7 @@ export default function Page2({
                 <FormRow
                     type="text"
                     name="concavitySE"
-                    labelText="Concavity SE"
+                    labelText="Concavity Standard Error"
                     value={values.concavitySE}
                     handleChange={setNumber}
                 />
@@ -64,7 +64,7 @@ export default function Page2({
                 <FormRow
                     type="text"
                     name="areaSE"
-                    labelText="Area SE"
+                    labelText="Area Standard Error"
                     value={values.areaSE}
                     handleChange={setNumber}
                 />

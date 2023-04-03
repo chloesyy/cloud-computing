@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import Wrapper from "../pages/wrappers/Login";
 import DateInput from "./DateInput";
+import Submit from "./modal/Submit";
 
 export default function Page3({
     nextStep,
@@ -10,7 +11,7 @@ export default function Page3({
     setValues,
 }) {
     console.log(values);
-
+    
     const setDOC = (date) => {
         setValues({ ...values, doc: date });
     };
@@ -41,6 +42,12 @@ export default function Page3({
         previousStep();
     };
 
+    // const routeBack = (e) => {
+    //     e.preventDefault();
+    //     previousStep();
+    //     previousStep();
+    // };
+
     return (
         <Wrapper>
             <form className="form" onSubmit={onSubmit}>
@@ -54,8 +61,8 @@ export default function Page3({
                         onChange={handleChange}
                         required
                     >
-                        <option value="Positive">Positive</option>
-                        <option value="Negative">Negative</option>
+                        <option value="M">Malignant</option>
+                        <option value="B">Benign</option>
                     </select>
                 </div>
                 <DateInput
@@ -67,9 +74,10 @@ export default function Page3({
                     <button onClick={Previous} className="btn btn-block">
                         Back
                     </button>
-                    <button type="submit" className="btn btn-block">
+                    {/* <button type="submit" className="btn btn-block">
                         Submit
-                    </button>
+                    </button> */}
+                    <Submit values={values} setValues={setValues}/>
                 </div>
             </form>
         </Wrapper>

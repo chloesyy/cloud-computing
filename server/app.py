@@ -30,7 +30,7 @@ s3_session = boto3.Session(
     aws_secret_access_key = config['aws_credentials']['secret_access_key'],
     aws_session_token = config['aws_credentials']['token']
 )
-s3 = s3_session.client('s3')
+s3 = s3_session.client('s3', region_name="us-east-1")
 
 bucket_name = config['s3']['bucket_name']
 file_name = config['s3']['file_path']
@@ -120,12 +120,12 @@ def form():
     try:
         return jsonify(
             {
-            "message": "Login Successful.",
+            "message": "Data Submitted.",
             }
         ), 200
     except Exception as e:
         return jsonify({
-            "message": "Login Failed."
+            "message": "Data Failed to Submit."
         }), 500
     
     #insert data 

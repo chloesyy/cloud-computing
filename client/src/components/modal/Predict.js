@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import close from "../images/close.png";
-import "./Predict.css";
+import "./predict.css";
 
 export default function Predict({ values, setValues }) {
     const [modal, setModal] = useState(false);
@@ -21,6 +21,7 @@ export default function Predict({ values, setValues }) {
                 cache: "no-cache",
                 headers: {
                     "Content-Type": "application/json",
+                    "Accept": "application/json"
                 },
                 body: JSON.stringify(values),
             })
@@ -60,18 +61,20 @@ export default function Predict({ values, setValues }) {
                     <div onClick={toggleModal} className="overlay"></div>
                     <div className="modal-content">
                         <h5>Prediction Results</h5>
-                        <p>
-                            {values.prediction != null
-                                ? values.prediction >= 0.5
-                                    ? "Positive"
-                                    : "Negative"
-                                : "Invalid Input: Please fill in all input fields"}
-                        </p>
-                        {values.prediction != null && (
+                        <div className="modal-result">
                             <p>
-                                Positive Confidence Score: {values.prediction}
+                                {values.prediction != null
+                                    ? values.prediction >= 0.5
+                                        ? "Malignant"
+                                        : "Benign"
+                                    : ""}
                             </p>
-                        )}
+                            {values.prediction != null && (
+                                <p>
+                                    Malignant Confidence Score: {values.prediction}
+                                </p>
+                            )}
+                        </div>
                         <input
                             type="image"
                             src={close}
