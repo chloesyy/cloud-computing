@@ -36,20 +36,21 @@ export default function Login() {
         e.preventDefault();
 
         // For accessing RDS in the backend
-        // async function get_response() {
-        //     await fetch("/api/login", {
-        //         method: "POST",
-        //         cache: "no-cache",
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //         },
-        //         body: JSON.stringify(values),
-        //     }).then((response) => {
-        //         if (response.ok) {
-        //             console.log("response worked!");
-        //         }
-        //     });
-        // }
+        async function get_response() {
+            await fetch("/api/login", {
+                method: "POST",
+                cache: "no-cache",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(values),
+            }).then((response) => {
+                if (response.ok) {
+                    console.log("response worked!");
+                }
+            });
+        }
+        get_response();
 
         if (values.isLogin) {
             // Login AWS Cognito

@@ -42,12 +42,6 @@ export default function Page3({
         previousStep();
     };
 
-    // const routeBack = (e) => {
-    //     e.preventDefault();
-    //     previousStep();
-    //     previousStep();
-    // };
-
     return (
         <Wrapper>
             <form className="form" onSubmit={onSubmit}>
@@ -74,9 +68,6 @@ export default function Page3({
                     <button onClick={Previous} className="btn btn-block">
                         Back
                     </button>
-                    {/* <button type="submit" className="btn btn-block">
-                        Submit
-                    </button> */}
                     <Submit values={values} setValues={setValues}/>
                 </div>
             </form>
