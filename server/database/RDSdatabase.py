@@ -21,15 +21,11 @@ class RDSdatabase:
     def initialConfig(self): #run when starting app
         #create tables for organisation and user details
         sqlQuery = sql.SQL("""
-        DROP TABLE userDetails;
-
         CREATE TABLE userDetails (
         userName VARCHAR (50) PRIMARY KEY,
         password VARCHAR (50) NOT NULL,
         organisationName VARCHAR (100) NOT NULL
         );
-
-        DROP TABLE joint_table;
 
         CREATE TABLE joint_table (
         entryID SERIAL PRIMARY KEY,
@@ -76,7 +72,7 @@ class RDSdatabase:
         areaWorst FLOAT NOT NULL,
         symmetryMean FLOAT NOT NULL,
         textureMean FLOAT NOT NULL,
-        prediction FLOAT NOT NULL
+        prediction VARCHAR (10) NOT NULL,
         diagnosis VARCHAR (100),
         dateOfClosure TIMESTAMP
         );
@@ -139,10 +135,10 @@ class RDSdatabase:
 
         #adding the compulsory attributes first 
         sqlQuery = sql.SQL("""
-        INSERT INTO {table} (patientID,firstName,lastName,dateOfBirth,dateOfService,areaCode,phoneNumber,remarks,concavityMean,concavitySE,concavityWorst,areaMean,areaSE,areaWorst,symmetryMean,textureMean,diagnosis,dateOfClosure) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);
+        INSERT INTO {table} (patientid,firstName,lastName,dateOfBirth,dateOfService,areaCode,phoneNumber,remarks,concavityMean,concavitySE,concavityWorst,areaMean,areaSE,areaWorst,symmetryMean,textureMean,prediction,diagnosis,dateOfClosure) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);
         SELECT * FROM {table};
         """).format(table=sql.Identifier(userTableName))
-        currentUserCursor.execute(sqlQuery, (patientID,firstName,lastName,DOB,date_of_service,area_code,phoneNum,remarks,concavity_mean,concavity_SE,concavity_worst,area_mean,area_SE,area_worst,symmetry_mean,texture_mean,diagnosis,date_of_closure))
+        currentUserCursor.execute(sqlQuery, (patientID,firstName,lastName,DOB,date_of_service,area_code,phoneNum,remarks,concavity_mean,concavity_SE,concavity_worst,area_mean,area_SE,area_worst,symmetry_mean,texture_mean,prediction,diagnosis,date_of_closure))
         return currentUserCursor.fetchall(), currentUserEngine, currentUserCursor
     
     def fetchPatientDataByPatientID(self,currentUserCursor,organisationTableName,patientID):
