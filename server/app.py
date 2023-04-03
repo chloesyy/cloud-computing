@@ -87,6 +87,7 @@ def login():
         return jsonify({
             "message": "Login Failed."
         }), 500
+    
         
 @app.route("/api/form", methods=['POST'])
 def form():
@@ -132,6 +133,8 @@ def form():
         return jsonify({
             "message": "Data Failed to Submit."
         }), 500
+    
+    #insert data 
         
 @app.route("/api/predict", methods=['POST'])
 def predict():

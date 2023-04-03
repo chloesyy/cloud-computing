@@ -21,30 +21,24 @@ class RDSdatabase:
     def initialConfig(self): #run when starting app
         #create tables for organisation and user details
         sqlQuery = sql.SQL("""
-        DROP TABLE userDetails;
-
         CREATE TABLE userDetails (
         userName VARCHAR (50) PRIMARY KEY,
         password VARCHAR (50) NOT NULL,
         organisationName VARCHAR (100) NOT NULL
         );
 
-        DROP TABLE joint_table;
-
         CREATE TABLE joint_table (
         entryID SERIAL PRIMARY KEY,
-        remarks VARCHAR(100) NOT NULL,
-        concavityMean FLOAT NOT NULL,
-        concavitySE FLOAT NOT NULL,
-        concavityWorst FLOAT NOT NULL,
-        areaMean FLOAT NOT NULL,
-        areaSE FLOAT NOT NULL,
-        areaWorst FLOAT NOT NULL,
-        symmetryMean FLOAT NOT NULL,
-        textureMean FLOAT NOT NULL,
-        diagnosis VARCHAR (100) NOT NULL,
-        prediction FLOAT NOT NULL,
-        dateOfClosure TIMESTAMP NOT NULL
+        CONCAVITY_MEAN float8 NOT NULL,
+        AREA_SE float8 NOT NULL,
+        AREA_WORST float8 NOT NULL,
+        CONCAVITY_WORST float8 NOT NULL,
+        CONCAVITY_SE float8 NOT NULL,
+        TEXTURE_MEAN float8 NOT NULL,
+        AREA_MEAN float8 NOT NULL,
+        SYMMETRY_MEAN float8 NOT NULL, 
+	    DIAGNOSIS VARCHAR (100) NOT NULL,
+        DATEOFCLOSURE TIMESTAMP NOT NULL
         );
         """)
 
@@ -78,7 +72,7 @@ class RDSdatabase:
         areaWorst FLOAT NOT NULL,
         symmetryMean FLOAT NOT NULL,
         textureMean FLOAT NOT NULL,
-        prediction FLOAT NOT NULL
+        prediction VARCHAR (10) NOT NULL,
         diagnosis VARCHAR (100),
         dateOfClosure TIMESTAMP
         );
@@ -141,15 +135,15 @@ class RDSdatabase:
 
         #adding the compulsory attributes first 
         sqlQuery = sql.SQL("""
-        INSERT INTO {table} (patientID,firstName,lastName,dateOfBirth,dateOfService,areaCode,phoneNumber,remarks,concavityMean,concavitySE,concavityWorst,areaMean,areaSE,areaWorst,symmetryMean,textureMean,diagnosis,dateOfClosure) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);
+        INSERT INTO {table} (patientid,firstName,lastName,dateOfBirth,dateOfService,areaCode,phoneNumber,remarks,concavityMean,concavitySE,concavityWorst,areaMean,areaSE,areaWorst,symmetryMean,textureMean,prediction,diagnosis,dateOfClosure) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);
         SELECT * FROM {table};
         """).format(table=sql.Identifier(userTableName))
-        currentUserCursor.execute(sqlQuery, (patientID,firstName,lastName,DOB,date_of_service,area_code,phoneNum,remarks,concavity_mean,concavity_SE,concavity_worst,area_mean,area_SE,area_worst,symmetry_mean,texture_mean,diagnosis,date_of_closure))
+        currentUserCursor.execute(sqlQuery, (patientID,firstName,lastName,DOB,date_of_service,area_code,phoneNum,remarks,concavity_mean,concavity_SE,concavity_worst,area_mean,area_SE,area_worst,symmetry_mean,texture_mean,prediction,diagnosis,date_of_closure))
         return currentUserCursor.fetchall(), currentUserEngine, currentUserCursor
     
     def fetchPatientDataByPatientID(self,currentUserCursor,organisationTableName,patientID):
         sqlQuery = sql.SQL("""
-        SELECT isLeftBreast,isImplant,density,remarks,concavityMean,concavitySE,areaMean,areaSE,areaWorst,symmetryMean,textureMean FROM {table} WHERE patientid=%s
+        SELECT concavityMean,areaSE,areaWorst,concavityWorst,concavitySE,textureMean,areaMean,symmetryMean FROM {table} WHERE patientid=%s
         """).format(table=sql.Identifier(organisationTableName))
         currentUserCursor.execute(sqlQuery, (patientID,))
         patientData = currentUserCursor.fetchall()[0]
@@ -159,16 +153,16 @@ class RDSdatabase:
         currentUserEngine, currentUserCursor = self.userSignIn(userName, userPassword)
         organisationName = self.findOrganisationNameFromUserCredentials(userName, userPassword)
         userTableName = self.mapOrganisationNameToTableName(organisationName)
-        (is_left_breast,is_implant,density,remarks,concavity_mean,concavity_SE,area_mean,area_SE,area_worst,symmetry_mean,texture_mean) = self.fetchPatientDataByPatientID(currentUserCursor,userTableName,patientID)
+        (concavity_mean,area_SE,area_worst,concavityWorst,concavity_SE,texture_mean,area_mean,symmetry_mean) = self.fetchPatientDataByPatientID(currentUserCursor,userTableName,patientID)
         sqlQuery = sql.SQL("""
-        INSERT INTO joint_table (isLeftBreast,isImplant,density,remarks,concavityMean,concavitySE,areaMean,areaSE,areaWorst,symmetryMean,textureMean,diagnosis,dateOfClosure) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);
+        INSERT INTO joint_table (CONCAVITY_MEAN,AREA_SE,AREA_WORST,CONCAVITY_WORST,CONCAVITY_SE,TEXTURE_MEAN,AREA_MEAN,SYMMETRY_MEAN,DIAGNOSIS,DATEOFCLOSURE) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);
         UPDATE {table} SET diagnosis=%s, dateOfClosure=%s WHERE patientid=%s;
         """).format(table=sql.Identifier(userTableName))
-        currentUserCursor.execute(sqlQuery, (is_left_breast,is_implant,density,remarks,concavity_mean,concavity_SE,area_mean,area_SE,area_worst,symmetry_mean,texture_mean,diagnosis,date_of_closure,diagnosis,date_of_closure,patientID))
+        currentUserCursor.execute(sqlQuery, (concavity_mean,area_SE,area_worst,concavityWorst,concavity_SE,texture_mean,area_mean,symmetry_mean,diagnosis,date_of_closure,diagnosis,date_of_closure,patientID))
         return currentUserEngine, currentUserCursor
 
     def removeUser(self, userName):
-        self.masterCursor.execute(sql.SQL("DROP USER IF EXISTS {user};").format(user=sql.Identifier(userName)))
+        self.masterCursor.execute(sql.SQL("DROP USER IF EXISTS {user}; DELETE FROM userDetails WHERE userName=%s;").format(user=sql.Identifier(userName)), (userName,))
 
     def closeUser(self, userEngine):
         userEngine.close()
