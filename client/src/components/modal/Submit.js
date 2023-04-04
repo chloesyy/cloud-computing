@@ -2,34 +2,34 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import close from "../images/close.png";
 import tick from "../images/tick.png";
-import "./submit.css";
+import "./Submit.css";
 
-export default function Submit({ values, setValues}) {
+export default function Submit({ values, setValues }) {
     const [modal, setModal] = useState(false);
-    const [status, setStatus] = useState(''); 
+    const [status, setStatus] = useState("");
     const navigate = useNavigate();
 
     const submit = (e) => {
-      e.preventDefault();
+        e.preventDefault();
 
-      async function get_response() {
-          await fetch("/api/form", {
-              method: "POST",
-              cache: "no-cache",
-              headers: {
-                  "Content-Type": "application/json",
-                  "Accept": "application/json",
-              },
-              body: JSON.stringify(values),
-          })
-              .then((response) => response.json())
-              .then((data) => {
-                  setStatus("Patient details have been successfully stored!")
-                  console.log(data);
-              });
-      }
-      get_response();
-      setModal(!modal);
+        async function get_response() {
+            await fetch("/api/form", {
+                method: "POST",
+                cache: "no-cache",
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                },
+                body: JSON.stringify(values),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    setStatus("Patient details have been successfully stored!");
+                    console.log(data);
+                });
+        }
+        get_response();
+        setModal(!modal);
     };
 
     const toggleModal = () => {

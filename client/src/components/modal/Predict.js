@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import close from "../images/close.png";
-import "./predict.css";
+import "./Predict.css";
 
 export default function Predict({ values, setValues }) {
     const [modal, setModal] = useState(false);
@@ -21,7 +21,7 @@ export default function Predict({ values, setValues }) {
                 cache: "no-cache",
                 headers: {
                     "Content-Type": "application/json",
-                    "Accept": "application/json"
+                    Accept: "application/json",
                 },
                 body: JSON.stringify(values),
             })
@@ -71,7 +71,8 @@ export default function Predict({ values, setValues }) {
                             </p>
                             {values.prediction != null && (
                                 <p>
-                                    Malignant Confidence Score: {values.prediction}
+                                    Malignant Confidence Score:{" "}
+                                    {values.prediction}
                                 </p>
                             )}
                         </div>

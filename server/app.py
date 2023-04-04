@@ -137,7 +137,7 @@ def predict():
             float(values['areaMean']),
             float(values['symmetryMean'])]]
     data = np.array(data).reshape((1, 8))
-    result = model.predict_proba(data)
+    # result = model.predict_proba(data)
     try:
         result = model.predict_proba(data)
         print("result:", np.round(float(result[:, 1][0]), 2))
