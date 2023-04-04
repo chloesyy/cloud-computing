@@ -18,7 +18,7 @@ rdsDB = RDSdatabase(config['rds']['username'],
                     config['rds']['host'],
                     config['rds']['dbname'],
                     config['rds']['port'])
-rdsDB.initialConfig()
+
 try:
     rdsDB.initialConfig()
     # rdsDB.createNewOrganisation('NUH')
