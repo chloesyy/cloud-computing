@@ -18,7 +18,7 @@ rdsDB = RDSdatabase(config['rds']['username'],
                     config['rds']['host'],
                     config['rds']['dbname'],
                     config['rds']['port'])
-rdsDB.initialConfig()
+
 try:
     rdsDB.initialConfig()
     # rdsDB.createNewOrganisation('NUH')
@@ -28,9 +28,6 @@ try:
 except: 
     print('RDS has already been set up.')
 
-# query = 'SELECT * FROM userDetails'
-# a = rdsDB.masterCursor.execute(query)
-# print(a)
 ########################################### GET MODEL FOR PREDICTION ################################################
 
 s3_session = boto3.Session(
@@ -93,7 +90,10 @@ def login():
 def form():
     print(USERNAME, PASSWORD)
     values = request.get_json()
-
+    if values['prediction'] >= 0.5:
+        prediction = 'M'
+    else:
+        prediction = 'B'
     rdsDB.addPatientData(USERNAME, 
                          PASSWORD, 
                          values['patientID'], 
@@ -112,17 +112,11 @@ def form():
                          values['areaWorst'],
                          values['symmetryMean'],
                          values['textureMean'],
-                         values['prediction'],
+                         prediction,
                          values['diagnosis'],
                          values['doc']
                         )
-    
-    # def addPatientData(self, userName, userPassword, patientID, firstName, lastName, DOB, date_of_service, area_code, phoneNum, 
-    #                    remarks, concavity_mean, concavity_SE, concavity_worst, area_mean, area_SE, area_worst, symmetry_mean,
-    #                    texture_mean, prediction, diagnosis=None, date_of_closure=None):
-    
-    # TODO: use this to update the RDS database!
-    # variable names can be found on Form.js 
+    print('Data stored successfully!')
     try:
         return jsonify(
             {
