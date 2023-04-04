@@ -21,9 +21,6 @@ rdsDB = RDSdatabase(config['rds']['username'],
 
 try:
     rdsDB.initialConfig()
-    # rdsDB.createNewOrganisation('NUH')
-    # rdsDB.createNewOrganisation('SGH')
-    # rdsDB.createNewOrganisation('SingHealth')
     print('RDS(es) set up successfully.')
 except: 
     print('RDS has already been set up.')
@@ -44,7 +41,7 @@ location = 'tmp/xgb_breast_classifier.pkl'
 s3.download_file(bucket_name, file_name, location)
 model = pickle.load(open(location, "rb"))
 
-########################################### REACT REQUESTS ##############################################
+########################################### REACT REQUESTS ###########################################################
 USERNAME = None
 PASSWORD = None
 ORGANISATION = None
@@ -127,8 +124,6 @@ def form():
         return jsonify({
             "message": "Data Failed to Submit."
         }), 500
-    
-    #insert data 
         
 @app.route("/api/predict", methods=['POST'])
 def predict():
