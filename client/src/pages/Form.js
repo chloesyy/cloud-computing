@@ -25,7 +25,7 @@ const initialState = {
     symmetryMean: "",
     textureMean: "",
     prediction: null,
-    diagnosis: "",
+    diagnosis: "M",
     doc: null,
 };
 

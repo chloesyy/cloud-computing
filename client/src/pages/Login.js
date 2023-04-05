@@ -12,7 +12,7 @@ import UserPool from "../UserPool";
 const initialState = {
     username: "",
     password: "",
-    organisation: "",
+    organisation: "NUH",
     isLogin: true,
     isError: false,
     errorMessage: "",
@@ -53,6 +53,7 @@ export default function Login() {
 
         if (values.isLogin) {
             // Login AWS Cognito
+            setValues({ ...values, organisation: "" });
             const user = new CognitoUser({
                 Username: values.username,
                 Pool: UserPool,
