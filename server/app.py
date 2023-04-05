@@ -2,7 +2,7 @@ import json
 import boto3
 import pickle
 from flask_cors import CORS
-from database.RDSdatabase import RDSdatabase
+# from database.RDSdatabase import RDSdatabase
 from flask import Flask, request, jsonify
 import numpy as np
 
@@ -13,17 +13,17 @@ with open("config.json", "r") as f:
     config = json.load(f)
 
 ########################################### CONNECT TO RDS ################################################
-rdsDB = RDSdatabase(config['rds']['username'],
-                    config['rds']['password'],
-                    config['rds']['host'],
-                    config['rds']['dbname'],
-                    config['rds']['port'])
+# rdsDB = RDSdatabase(config['rds']['username'],
+#                     config['rds']['password'],
+#                     config['rds']['host'],
+#                     config['rds']['dbname'],
+#                     config['rds']['port'])
 
-try:
-    rdsDB.initialConfig()
-    print('RDS(es) set up successfully.')
-except: 
-    print('RDS has already been set up.')
+# try:
+#     rdsDB.initialConfig()
+#     print('RDS(es) set up successfully.')
+# except: 
+#     print('RDS has already been set up.')
 
 ########################################### GET MODEL FOR PREDICTION ################################################
 
@@ -61,15 +61,15 @@ def login():
     isLogin = request.get_json()["isLogin"]
     print('USERINFO', USERNAME, PASSWORD, ORGANISATION)
     
-    if isLogin:
-        try:
-            rdsDB.userSignIn(USERNAME, PASSWORD)
-            print('Login successful.')
-        except:
-            print(f'Failed to authenticate user {USERNAME}.')
-    else:
-        rdsDB.createNewUser(USERNAME, PASSWORD, ORGANISATION)
-        print('New user created.')
+    # if isLogin:
+    #     try:
+    #         rdsDB.userSignIn(USERNAME, PASSWORD)
+    #         print('Login successful.')
+    #     except:
+    #         print(f'Failed to authenticate user {USERNAME}.')
+    # else:
+    #     rdsDB.createNewUser(USERNAME, PASSWORD, ORGANISATION)
+    #     print('New user created.')
 
     try:
         return jsonify(
@@ -91,29 +91,29 @@ def form():
         prediction = 'M'
     else:
         prediction = 'B'
-    rdsDB.addPatientData(USERNAME, 
-                         PASSWORD, 
-                         values['patientID'], 
-                         values['patientFirstName'],
-                         values['patientLastName'],
-                         values['dob'],
-                         values['dos'], 
-                         values['areaCode'], 
-                         values['phoneNumber'], 
-                         values['remarks'],
-                         values['concavityMean'],
-                         values['concavitySE'],
-                         values['concavityWorst'],
-                         values['areaMean'],
-                         values['areaSE'],
-                         values['areaWorst'],
-                         values['symmetryMean'],
-                         values['textureMean'],
-                         prediction,
-                         values['diagnosis'],
-                         values['doc']
-                        )
-    print('Data stored successfully!')
+    # rdsDB.addPatientData(USERNAME, 
+    #                      PASSWORD, 
+    #                      values['patientID'], 
+    #                      values['patientFirstName'],
+    #                      values['patientLastName'],
+    #                      values['dob'],
+    #                      values['dos'], 
+    #                      values['areaCode'], 
+    #                      values['phoneNumber'], 
+    #                      values['remarks'],
+    #                      values['concavityMean'],
+    #                      values['concavitySE'],
+    #                      values['concavityWorst'],
+    #                      values['areaMean'],
+    #                      values['areaSE'],
+    #                      values['areaWorst'],
+    #                      values['symmetryMean'],
+    #                      values['textureMean'],
+    #                      prediction,
+    #                      values['diagnosis'],
+    #                      values['doc']
+    #                     )
+    # print('Data stored successfully!')
     try:
         return jsonify(
             {
