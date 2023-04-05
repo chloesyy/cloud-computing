@@ -1,6 +1,7 @@
 FROM python:3.10
 WORKDIR /server
 RUN apt-get install -y libpq-dev
+RUN pip install --upgrade pip
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 RUN pip install psycopg2
