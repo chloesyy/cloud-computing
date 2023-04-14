@@ -5,7 +5,7 @@ PostgreSQL RDS in private subnet and access through EC2 instance in public subne
 # Setup VPC and networks
 1. Create VPC and enable DNS host name for VPC. 
 2. Create 2 private subnets and 1 public subnet. 
-3. Create NAT gateway in public subnet (Not necessary) 
+3. Create NAT gateway in public subnet 
 4. Create Internet gateway and attach to VPC. 
 5. Configure route table for public subnet (allow all IP addresses and source Internet Gateway)
 6. Create route table for private subnet and link to NAT gateway. 
