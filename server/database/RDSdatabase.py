@@ -50,7 +50,6 @@ class RDSdatabase:
     def createNewOrganisation(self, organisationName):
         newTableName = self.mapOrganisationNameToTableName(organisationName)
 
-        #TO-DO: update schema
         sqlQuery = sql.SQL("""
         CREATE ROLE {role};
         GRANT CONNECT ON DATABASE {dbName} TO {role};
@@ -99,7 +98,6 @@ class RDSdatabase:
         )
         self.masterCursor.execute(sqlQuery, (userPassword,userName,userPassword,organisationName))
 
-    #TO-DO: not sure if handling multiple users will cause problem
     def userSignIn(self, userName, userPassword):
         userEngine = psycopg2.connect(
             database=self.databaseName,
