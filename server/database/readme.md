@@ -26,10 +26,8 @@ Protocol: Enter TCP.
 Port Range: Enter the port of your RDS DB instance.
 Source: Enter the private IP address of EC2 instance of front-end server.
 
-# Initialise RDS database
+# Initialise RDS database using Jupyter Notebook
 1. SSH into EC2 instance of front-end server. 
-
-The following steps are for running the initialisation code for RDS database on Jupyter Notebook. 
 2. Install Miniconda by following https://varhowto.com/install-miniconda-ubuntu-20-04/ and https://medium.com/@GalarnykMichael/aws-ec2-part-3-installing-anaconda-on-ec2-linux-ubuntu-dbef0835818a
 3. conda install jupyter
 4. conda install psycopg2
