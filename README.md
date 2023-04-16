@@ -86,3 +86,5 @@ https://d18mq98qvad2m0.cloudfront.net/
 **Note: You will need to adjust the credentials in the respective shell scrips accordingly (get URI from ECR).**
 
 **Note: For more information on deployment: <https://adamraudonis.medium.com/how-to-deploy-a-website-on-aws-with-docker-flask-react-from-scratch-d0845ebd9da4>.**
+
+**Note: Steps on setting up the machine learning pipeline is in Readme file in ML_pipeline folder and steps on setting up RDS is in the Readme in server/database folder.**
